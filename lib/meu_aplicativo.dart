@@ -33,7 +33,7 @@ class MeuAplicativo extends StatelessWidget {
           color: Colors.black,
         ),
       ),
-      title: 'Flutter Demo',
+      title: 'Monitora Orgânico',
       initialRoute: '/splash',
       routes: {
         '/': (context) => const AuthCheck(),
@@ -45,7 +45,7 @@ class MeuAplicativo extends StatelessWidget {
         '/lgpd': (context) => const ColetaDadosPage(),
         '/forgot_password': (context) => const ForgotPasswordPage(),
         '/edit_profile': (context) => const EditProfileScreen(),
-        'verify_email': (context) => const VerifyEmailScreen()
+        'verify_email': (context) => const VerifyEmailScreen(),
       },
     );
   }

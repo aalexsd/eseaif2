@@ -18,7 +18,6 @@ class _LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
   final email = TextEditingController();
   final senha = TextEditingController();
-  var url = Uri.parse('https://www.cegafiunb.com/');
 
   bool isLogin = true;
   late String titulo;
@@ -305,7 +304,7 @@ class _LoginPageState extends State<LoginPage> {
     if (await launchUrl(_url)) {
       await launchUrl(_url);
     } else {
-      throw 'Could not launch $_url';
+      throw 'Não foi possível abrir $_url';
     }
   }
 
