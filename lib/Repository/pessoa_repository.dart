@@ -11,7 +11,7 @@ class PessoaRepository {
   static var grupoAmostral = ['Beneficiário', 'Controle'];
 
 
-  static var producaoGeral = ['Agroecológica', 'Orgânica certificada', 'Convencional', 'mista (parte agroecológica ou certificada/ parte convencional)'];
+  static var producaoGeral = ['Agroecológica', 'Orgânica certificada', 'Convencional', 'Mista (parte agroecológica ou certificada/ parte convencional)'];
 
   static var identificacaoComunidade = [
     'Propriedade rural arrendada',

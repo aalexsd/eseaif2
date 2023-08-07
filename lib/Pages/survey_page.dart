@@ -87,7 +87,9 @@ class _FormPageState extends State<FormPage> {
   final List<String> _selectedServicosPublicos = [];
   final List<String> _selectedActivities = [];
   bool _produziuVegetais = false;
-  int _quantidadeItensProduzidos = 1;
+  bool _criouAnimais = false;
+  int _quantidadeVegetaisProduzidos = 1;
+  int _quantidadeAnimaisCriados = 1;
   final List<String> _selectedVegetais = [];
 
   saveAll() async {
@@ -988,10 +990,10 @@ class _FormPageState extends State<FormPage> {
                                   isDense: true,
                                   dropdownColor: Colors.white,
                                   focusColor: Colors.white,
-                                  value: _quantidadeItensProduzidos,
+                                  value: _quantidadeVegetaisProduzidos,
                                   onChanged: (value) {
                                     setState(() {
-                                      _quantidadeItensProduzidos = value!;
+                                      _quantidadeVegetaisProduzidos = value!;
                                       _selectedVegetais.clear();
                                     });
                                   },
@@ -1006,7 +1008,7 @@ class _FormPageState extends State<FormPage> {
                               ),
                             ],
                           ),
-                        if (_produziuVegetais && _quantidadeItensProduzidos > 0)
+                        if (_produziuVegetais && _quantidadeVegetaisProduzidos > 0)
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -1027,7 +1029,7 @@ class _FormPageState extends State<FormPage> {
                               ),
                               Column(
                                 children: List.generate(
-                                    _quantidadeItensProduzidos, (index) {
+                                    _quantidadeVegetaisProduzidos, (index) {
                                   final selectedVegetal =
                                       _selectedVegetais.length > index
                                           ? _selectedVegetais[index]
@@ -1304,7 +1306,7 @@ class _FormPageState extends State<FormPage> {
                                                       MainAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      'Área Pura Colhida em Hectares',
+                                                      'Total de área destinada à produção (Hectares)',
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.w500,
@@ -1357,7 +1359,7 @@ class _FormPageState extends State<FormPage> {
                                                             color: Colors.red),
                                                   ),
                                                   labelText:
-                                                      'Área colhida produção pura (ha)',
+                                                      'Área destinada à produção (ha)',
                                                 ),
                                               ),
                                               const Padding(
@@ -1370,73 +1372,7 @@ class _FormPageState extends State<FormPage> {
                                                       MainAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      'Área Consorciada Colhida em Hectares',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontSize: 15),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              TextFormField(
-                                                validator: (value) =>
-                                                    value != null &&
-                                                            value.isEmpty
-                                                        ? 'Preencha o Campo'
-                                                        : null,
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                controller: area2Controller,
-                                                decoration: InputDecoration(
-                                                  filled: true,
-                                                  fillColor: Colors.white,
-                                                  border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                            width: 0.8,
-                                                            color:
-                                                                Colors.white),
-                                                  ),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                            width: 0.8,
-                                                            color:
-                                                                Colors.white),
-                                                  ),
-                                                  errorBorder:
-                                                      OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                            width: 0.5,
-                                                            color: Colors.red),
-                                                  ),
-                                                  labelText:
-                                                      'Área colhida produção consorciada (ha)',
-                                                ),
-                                              ),
-                                              const Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: 10.0,
-                                                    top: 20,
-                                                    bottom: 10),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'Quantidade Colhida',
+                                                      'Quantidade Colhida (Quilogramas)',
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.w500,
@@ -1490,7 +1426,7 @@ class _FormPageState extends State<FormPage> {
                                                             color: Colors.red),
                                                   ),
                                                   labelText:
-                                                      'Quantidade colhida',
+                                                      'Quantidade colhida (Kg)',
                                                 ),
                                               ),
                                               const Padding(
@@ -1503,7 +1439,7 @@ class _FormPageState extends State<FormPage> {
                                                       MainAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      'Quantidade Vendida',
+                                                      'Quantidade Vendida (Quilogramas)',
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.w500,
@@ -1572,7 +1508,7 @@ class _FormPageState extends State<FormPage> {
                                                             color: Colors.red),
                                                   ),
                                                   labelText:
-                                                      'Quantidade vendida',
+                                                      'Quantidade vendida (Kg)',
                                                 ),
                                               ),
                                               const Padding(
@@ -1689,265 +1625,12 @@ class _FormPageState extends State<FormPage> {
                                                     left: 10.0,
                                                     top: 20,
                                                     bottom: 10),
-                                                child: SizedBox(
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      Text(
-                                                        'Parcela da Produção destinada ao \nPAA, PNAE',
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontSize: 15,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              // TextFormField(
-                                              //   decoration: InputDecoration(
-                                              //     filled: true,
-                                              //     fillColor: Colors.white,
-                                              //     border: OutlineInputBorder(
-                                              //       borderRadius:
-                                              //           BorderRadius.circular(
-                                              //               30),
-                                              //       borderSide:
-                                              //           const BorderSide(
-                                              //               width: 0.8,
-                                              //               color:
-                                              //                   Colors.white),
-                                              //     ),
-                                              //     enabledBorder:
-                                              //         OutlineInputBorder(
-                                              //       borderRadius:
-                                              //           BorderRadius.circular(
-                                              //               30),
-                                              //       borderSide:
-                                              //           const BorderSide(
-                                              //               width: 0.8,
-                                              //               color:
-                                              //                   Colors.white),
-                                              //     ),
-                                              //     errorBorder:
-                                              //         OutlineInputBorder(
-                                              //       borderRadius:
-                                              //           BorderRadius.circular(
-                                              //               30),
-                                              //       borderSide:
-                                              //           const BorderSide(
-                                              //               width: 0.5,
-                                              //               color: Colors.red),
-                                              //     ),
-                                              //     labelText:
-                                              //         'Valor total das vendas (R\$)',
-                                              //   ),
-                                              // ),
-                                              // const SizedBox(
-                                              //   height: 20,
-                                              // ),
-                                              TextFormField(
-                                                validator: (value) =>
-                                                    value != null &&
-                                                            value.isEmpty
-                                                        ? 'Preencha o Campo'
-                                                        : null,
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                controller:
-                                                    parcelaPAAController,
-                                                decoration: InputDecoration(
-                                                  filled: true,
-                                                  fillColor: Colors.white,
-                                                  border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                            width: 0.8,
-                                                            color:
-                                                                Colors.white),
-                                                  ),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                            width: 0.8,
-                                                            color:
-                                                                Colors.white),
-                                                  ),
-                                                  errorBorder:
-                                                      OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                            width: 0.5,
-                                                            color: Colors.red),
-                                                  ),
-                                                  labelText:
-                                                      'Parcela da produção destinada ao PAA, PNAE',
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 10.0,
-                                                    top: 20,
-                                                    bottom: 10),
-                                                child: SizedBox(
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  child: const Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      Text(
-                                                        'Parcela da Produção destinada a \nMercados Locais no mesmo Estado',
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontSize: 15),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              TextFormField(
-                                                validator: (value) =>
-                                                    value != null &&
-                                                            value.isEmpty
-                                                        ? 'Preencha o Campo'
-                                                        : null,
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                controller:
-                                                    parcelaMercadosLocaisController,
-                                                decoration: InputDecoration(
-                                                  filled: true,
-                                                  fillColor: Colors.white,
-                                                  border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                            width: 0.8,
-                                                            color:
-                                                                Colors.white),
-                                                  ),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                            width: 0.8,
-                                                            color:
-                                                                Colors.white),
-                                                  ),
-                                                  errorBorder:
-                                                      OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                            width: 0.5,
-                                                            color: Colors.red),
-                                                  ),
-                                                  labelText:
-                                                      'Parcela da produção destinada a mercados locais no mesmo estado ',
-                                                ),
-                                              ),
-                                              const Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: 10.0,
-                                                    top: 20,
-                                                    bottom: 10),
                                                 child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      'Parcela da Produção destinada a \noutros Estados',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontSize: 15),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              TextFormField(
-                                                validator: (value) =>
-                                                    value != null &&
-                                                            value.isEmpty
-                                                        ? 'Preencha o Campo'
-                                                        : null,
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                controller:
-                                                    parcelaOutrosEstadosController,
-                                                decoration: InputDecoration(
-                                                  filled: true,
-                                                  fillColor: Colors.white,
-                                                  border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                            width: 0.8,
-                                                            color:
-                                                                Colors.white),
-                                                  ),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                            width: 0.8,
-                                                            color:
-                                                                Colors.white),
-                                                  ),
-                                                  errorBorder:
-                                                      OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                            width: 0.5,
-                                                            color: Colors.red),
-                                                  ),
-                                                  labelText:
-                                                      'Parcela da produção destinada a outros estados',
-                                                ),
-                                              ),
-                                              const Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: 10.0,
-                                                    top: 20,
-                                                    bottom: 10),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'Parcela da Produção destinada \nao Consumo',
+                                                      'Parcela da Produção destinada \nao consumo próprio (Quilogramas)',
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.w500,
@@ -2001,74 +1684,7 @@ class _FormPageState extends State<FormPage> {
                                                             color: Colors.red),
                                                   ),
                                                   labelText:
-                                                      'Parcela da produção destinada ao consumo familiar',
-                                                ),
-                                              ),
-                                              const Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: 10.0,
-                                                    top: 20,
-                                                    bottom: 10),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'Valor da Produção destinado \nao Consumo',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontSize: 15),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              TextFormField(
-                                                validator: (value) =>
-                                                    value != null &&
-                                                            value.isEmpty
-                                                        ? 'Preencha o Campo'
-                                                        : null,
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                controller:
-                                                    valorConsumoController,
-                                                decoration: InputDecoration(
-                                                  filled: true,
-                                                  fillColor: Colors.white,
-                                                  border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                            width: 0.8,
-                                                            color:
-                                                                Colors.white),
-                                                  ),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                            width: 0.8,
-                                                            color:
-                                                                Colors.white),
-                                                  ),
-                                                  errorBorder:
-                                                      OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30),
-                                                    borderSide:
-                                                        const BorderSide(
-                                                            width: 0.5,
-                                                            color: Colors.red),
-                                                  ),
-                                                  labelText:
-                                                      'Valor do consumo expresso em R\$',
+                                                      'Parcela da produção destinada ao consumo familiar (Kg)',
                                                 ),
                                               ),
                                               const SizedBox(
@@ -2105,20 +1721,20 @@ class _FormPageState extends State<FormPage> {
                           children: [
                             Radio<bool>(
                               value: true,
-                              groupValue: _produziuVegetais,
+                              groupValue: _criouAnimais,
                               onChanged: (value) {
                                 setState(() {
-                                  _produziuVegetais = value!;
+                                  _criouAnimais = value!;
                                 });
                               },
                             ),
                             const Text('Sim'),
                             Radio<bool>(
                               value: false,
-                              groupValue: _produziuVegetais,
+                              groupValue: _criouAnimais,
                               onChanged: (value) {
                                 setState(() {
-                                  _produziuVegetais = value!;
+                                  _criouAnimais = value!;
                                   _selectedVegetais.clear();
                                 });
                               },
@@ -2126,7 +1742,7 @@ class _FormPageState extends State<FormPage> {
                             const Text('Não'),
                           ],
                         ),
-                        if (_produziuVegetais)
+                        if (_criouAnimais)
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -2152,10 +1768,10 @@ class _FormPageState extends State<FormPage> {
                                   isDense: true,
                                   dropdownColor: Colors.white,
                                   focusColor: Colors.white,
-                                  value: _quantidadeItensProduzidos,
+                                  value: _quantidadeAnimaisCriados,
                                   onChanged: (value) {
                                     setState(() {
-                                      _quantidadeItensProduzidos = value!;
+                                      _quantidadeAnimaisCriados = value!;
                                       _selectedVegetais.clear();
                                     });
                                   },
@@ -2170,7 +1786,7 @@ class _FormPageState extends State<FormPage> {
                               ),
                             ],
                           ),
-                        if (_produziuVegetais && _quantidadeItensProduzidos > 0)
+                        if (_produziuVegetais && _quantidadeAnimaisCriados > 0)
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -2191,7 +1807,7 @@ class _FormPageState extends State<FormPage> {
                               ),
                               Column(
                                 children: List.generate(
-                                    _quantidadeItensProduzidos, (index) {
+                                    _quantidadeAnimaisCriados, (index) {
                                   final selectedVegetal =
                                   _selectedVegetais.length > index
                                       ? _selectedVegetais[index]
