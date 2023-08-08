@@ -9,6 +9,7 @@ import 'package:projeto_agricultura_familiar/Models/mascaras_formatacao.dart';
 import 'package:projeto_agricultura_familiar/Pages/home_page.dart';
 import 'package:projeto_agricultura_familiar/Repository/atividades_produtivas_repository.dart';
 import 'package:projeto_agricultura_familiar/Repository/pessoa_repository.dart';
+import 'package:projeto_agricultura_familiar/Repository/processados_repository.dart';
 import 'package:projeto_agricultura_familiar/Repository/unidades_familiares_repository.dart';
 import 'package:projeto_agricultura_familiar/Repository/vegetais_repository.dart';
 
@@ -37,8 +38,6 @@ class _FormPageState extends State<FormPage> {
   final controllerLongitude = TextEditingController();
   final user = FirebaseAuth.instance.currentUser!;
   final mascara = MascaraFormatacao();
-
-  //late DateTime selectedDate = DateTime.now();
   final tabelaUnidadeFamiliar = UnidadeFamiliarRepository.tabela;
   final tabelaAtividades = AtividadeRepository.tabela;
   bool _showValidationError = false;
@@ -47,11 +46,12 @@ class _FormPageState extends State<FormPage> {
   List<TextEditingController> quantidadeColhidaControllers = [];
   List<TextEditingController> quantidadeVendidaControllers = [];
   List<TextEditingController> precoUnitarioControllers = [];
-  List<TextEditingController> parcelaPAAControllers = [];
-  List<TextEditingController> parcelaMercadosLocaisControllers = [];
-  List<TextEditingController> parcelaOutrosEstadosControllers = [];
   List<TextEditingController> parcelaCosumoControllers = [];
-  List<TextEditingController> valorCosumoControllers = [];
+
+  // List<TextEditingController> parcelaPAAControllers = [];
+  // List<TextEditingController> parcelaMercadosLocaisControllers = [];
+  // List<TextEditingController> parcelaOutrosEstadosControllers = [];
+  // List<TextEditingController> valorCosumoControllers = [];
 
   List<TextEditingController> areaAnimalControllers = [];
   List<TextEditingController> volumeAnimalControllers = [];
@@ -59,6 +59,15 @@ class _FormPageState extends State<FormPage> {
   List<TextEditingController> quantidadeAnimalVendidoControllers = [];
   List<TextEditingController> precoAnimalUnitarioControllers = [];
   List<TextEditingController> parcelaAnimalCosumoControllers = [];
+
+  List<TextEditingController> areaProcessadosVegetalControllers = [];
+  List<TextEditingController> volumeProcessadosVegetalControllers = [];
+  List<TextEditingController> quantidadeProduzidaProcessadosVegetalControllers =
+      [];
+  List<TextEditingController> quantidadeVendidaProcessadosVegetalControllers =
+      [];
+  List<TextEditingController> precoProcessadosVegetalUnitarioControllers = [];
+  List<TextEditingController> parcelaProcessadosVegetalCosumoControllers = [];
 
   final _formKey = GlobalKey<FormState>();
 
@@ -79,23 +88,25 @@ class _FormPageState extends State<FormPage> {
   String? _selectedUnidade;
   String? _selectedProducao;
   bool _visitedInstitutions = false;
-  bool _selos = false;
-  bool _certificacao = false;
+  bool _possuiSelos = false;
+  bool _possuiCertificacao = false;
+  bool _possuiDAP = false;
+  bool _possuiCAR = false;
+  bool _produziuVegetais = false;
+  bool _produziuProcessadosVegetais = false;
+  bool _criouAnimais = false;
   final List<String> _selectedInstitutions = [];
   final List<String> _selectedSelos = [];
   final List<String> _selectedCertificacao = [];
-  bool _possuiDAP = false;
-  bool _possuiCAR = false;
   final List<String> _selectedDAP = [];
   final List<String> _selectedBeneficios = [];
-  final List<String> _selectedServicosPublicos = [];
   final List<String> _selectedActivities = [];
-  bool _produziuVegetais = false;
-  bool _criouAnimais = false;
-  int _quantidadeVegetaisProduzidos = 1;
-  int _quantidadeAnimaisCriados = 1;
   final List<String> _selectedVegetais = [];
+  final List<String> _selectedProcessadosVegetais = [];
   final List<String> _selectedAnimais = [];
+  int _quantidadeVegetaisProduzidos = 1;
+  int _quantidadeProcessadosVegetaisProduzidos = 1;
+  int _quantidadeAnimaisCriados = 1;
   List<int> importances = List<int>.filled(16, 0);
 
   saveAll() async {
@@ -106,25 +117,25 @@ class _FormPageState extends State<FormPage> {
     DocumentReference docRef = firestore.collection('dados').doc();
 
     // Crie uma variável para armazenar os valores do cônjuge
-    Map<String, dynamic> conjugeData;
-
-    if (_selectedMaritalStatus == 'Casado(a)') {
-      // Se for "Casado(a)", defina os valores do cônjuge
-      conjugeData = {
-        'nomeConjuge': nameConjugeController.text,
-        'cpfConjuge': cpfConjugeController.text,
-        'NISConjuge': nisConjugeController.text,
-        'telefoneConjuge': telefoneConjugeController.text,
-      };
-    } else {
-      // Se for diferente de "Casado(a)", defina os valores do cônjuge como nulos
-      conjugeData = {
-        'nomeConjuge': null,
-        'cpfConjuge': null,
-        'NISConjuge': null,
-        'telefoneConjuge': null,
-      };
-    }
+    // Map<String, dynamic> conjugeData;
+    //
+    // if (_selectedMaritalStatus == 'Casado(a)') {
+    //   // Se for "Casado(a)", defina os valores do cônjuge
+    //   conjugeData = {
+    //     'nomeConjuge': nameConjugeController.text,
+    //     'cpfConjuge': cpfConjugeController.text,
+    //     'NISConjuge': nisConjugeController.text,
+    //     'telefoneConjuge': telefoneConjugeController.text,
+    //   };
+    // } else {
+    //   // Se for diferente de "Casado(a)", defina os valores do cônjuge como nulos
+    //   conjugeData = {
+    //     'nomeConjuge': null,
+    //     'cpfConjuge': null,
+    //     'NISConjuge': null,
+    //     'telefoneConjuge': null,
+    //   };
+    // }
 
     // // Obtenha a posição atual do dispositivo
     Position position = await Geolocator.getCurrentPosition(
@@ -143,11 +154,11 @@ class _FormPageState extends State<FormPage> {
       final quantidadeColhidaController = quantidadeColhidaControllers[i];
       final quantidadeVendidaController = quantidadeVendidaControllers[i];
       final precoUnitarioController = precoUnitarioControllers[i];
-      final parcelaPAA = parcelaPAAControllers[i];
-      final parcelaMercadosLocais = parcelaMercadosLocaisControllers[i];
-      final parcelaOutrosEstados = parcelaOutrosEstadosControllers[i];
+      // final parcelaPAA = parcelaPAAControllers[i];
+      // final parcelaMercadosLocais = parcelaMercadosLocaisControllers[i];
+      // final parcelaOutrosEstados = parcelaOutrosEstadosControllers[i];
       final parcelaConsumo = parcelaCosumoControllers[i];
-      final valorConsumo = valorCosumoControllers[i];
+      // final valorConsumo = valorCosumoControllers[i];
 
       // Converter as strings para inteiros
       final areaPuraValue = int.parse(areaPuraController.text);
@@ -157,14 +168,14 @@ class _FormPageState extends State<FormPage> {
       final quantidadeVendidaValue =
           int.parse(quantidadeVendidaController.text);
       final precoUnitarioValue = double.parse(precoUnitarioController.text);
-      final parcelaPAAValue = int.parse(parcelaPAA.text);
-      final parcelaMercadosLocaisValue = int.parse(parcelaMercadosLocais.text);
-      final parcelaOutrosEstadosValue = int.parse(parcelaOutrosEstados.text);
+      // final parcelaPAAValue = int.parse(parcelaPAA.text);
+      // final parcelaMercadosLocaisValue = int.parse(parcelaMercadosLocais.text);
+      // final parcelaOutrosEstadosValue = int.parse(parcelaOutrosEstados.text);
       final parcelaConsumoValue = int.parse(parcelaConsumo.text);
-      final valorConsumoValue = int.parse(valorConsumo.text);
+      // final valorConsumoValue = int.parse(valorConsumo.text);
 
       // Criar um mapa com as informações do item
-      Map<String, dynamic> itemData = {
+      Map<String, dynamic> itemDataVegetal = {
         'NomeItem': _selectedVegetais[i],
         'AreaPura': areaPuraValue,
         'AreaConsorciada': areaConsorciadaValue,
@@ -172,15 +183,15 @@ class _FormPageState extends State<FormPage> {
         'QuantidadeVendida': quantidadeVendidaValue,
         'PrecoUnitario': precoUnitarioValue,
         'ValorTotalVendas': quantidadeVendidaValue * precoUnitarioValue,
-        'ParcelaPAA': parcelaPAAValue,
-        'ParcelaMercadosLocais': parcelaMercadosLocaisValue,
-        'ParcelaOutrosEstados': parcelaOutrosEstadosValue,
+        // 'ParcelaPAA': parcelaPAAValue,
+        // 'ParcelaMercadosLocais': parcelaMercadosLocaisValue,
+        // 'ParcelaOutrosEstados': parcelaOutrosEstadosValue,
         'ParcelaConsumo': parcelaConsumoValue,
-        'ValorConsumo': valorConsumoValue,
+        // 'ValorConsumo': valorConsumoValue,
       };
 
       // Adicionar o item à lista de itens
-      itens.add(itemData);
+      itens.add(itemDataVegetal);
     }
 
     late DateTime selectedDate = DateTime.now();
@@ -215,12 +226,9 @@ class _FormPageState extends State<FormPage> {
       'NIS/CADUnicoChefe': nisController.text,
       'TelefoneChefe': telefoneController.text,
       'GeneroChefe': _selectedGender,
-      'EstadoCivilChefe': _selectedMaritalStatus,
-      'conjuge': conjugeData,
       'possuiDAP': _selectedDAP,
       'unidadesFamiliares': _selectedInstitutions,
       'recebeuBeneficios': _selectedBeneficios,
-      'servicosPublicos': _selectedServicosPublicos,
       'location': 'Lat: $latitude | Long: $longitude',
       'Itens': itens,
       // Adicione outros campos aqui com os respectivos valores
@@ -328,7 +336,7 @@ class _FormPageState extends State<FormPage> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                'CPF do Chefe entrevistado',
+                                'CPF do entrevistado',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500, fontSize: 15),
                               ),
@@ -379,7 +387,7 @@ class _FormPageState extends State<FormPage> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                'Telefone do Chefe da Família',
+                                'Telefone do entrevistado',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500, fontSize: 15),
                               ),
@@ -616,6 +624,9 @@ class _FormPageState extends State<FormPage> {
                               );
                             }).toList(),
                           ),
+                        const Divider(
+                          thickness: 1,
+                        ),
                         const Padding(
                           padding: EdgeInsets.all(20.0),
                           child: Row(
@@ -655,6 +666,9 @@ class _FormPageState extends State<FormPage> {
                             const Text('Não'),
                           ],
                         ),
+                        const Divider(
+                          thickness: 1,
+                        ),
                         const Padding(
                           padding: EdgeInsets.all(20.0),
                           child: Row(
@@ -674,20 +688,20 @@ class _FormPageState extends State<FormPage> {
                           children: [
                             Radio<bool>(
                               value: true,
-                              groupValue: _selos,
+                              groupValue: _possuiSelos,
                               onChanged: (value) {
                                 setState(() {
-                                  _selos = value!;
+                                  _possuiSelos = value!;
                                 });
                               },
                             ),
                             const Text('Sim'),
                             Radio<bool>(
                               value: false,
-                              groupValue: _selos,
+                              groupValue: _possuiSelos,
                               onChanged: (value) {
                                 setState(() {
-                                  _selos = value!;
+                                  _possuiSelos = value!;
                                   _selectedSelos.clear();
                                 });
                               },
@@ -695,7 +709,7 @@ class _FormPageState extends State<FormPage> {
                             const Text('Não'),
                           ],
                         ),
-                        if (_selos)
+                        if (_possuiSelos)
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: UnidadeFamiliarRepository.selos
@@ -717,6 +731,9 @@ class _FormPageState extends State<FormPage> {
                               );
                             }).toList(),
                           ),
+                        const Divider(
+                          thickness: 1,
+                        ),
                         const Padding(
                           padding: EdgeInsets.all(20.0),
                           child: Text(
@@ -861,20 +878,20 @@ class _FormPageState extends State<FormPage> {
                           children: [
                             Radio<bool>(
                               value: true,
-                              groupValue: _certificacao,
+                              groupValue: _possuiCertificacao,
                               onChanged: (value) {
                                 setState(() {
-                                  _certificacao = value!;
+                                  _possuiCertificacao = value!;
                                 });
                               },
                             ),
                             const Text('Sim'),
                             Radio<bool>(
                               value: false,
-                              groupValue: _certificacao,
+                              groupValue: _possuiCertificacao,
                               onChanged: (value) {
                                 setState(() {
-                                  _certificacao = value!;
+                                  _possuiCertificacao = value!;
                                   _selectedCertificacao.clear();
                                 });
                               },
@@ -882,7 +899,7 @@ class _FormPageState extends State<FormPage> {
                             const Text('Não'),
                           ],
                         ),
-                        if (_certificacao)
+                        if (_possuiCertificacao)
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: UnidadeFamiliarRepository.prodOrganica
@@ -905,13 +922,16 @@ class _FormPageState extends State<FormPage> {
                               );
                             }).toList(),
                           ),
+                        const Divider(
+                          thickness: 1,
+                        ),
                         const Padding(
                           padding: EdgeInsets.all(20.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                'A sua família produziu vegetais?',
+                                'A unidade familiar produziu vegetais?',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -1108,17 +1128,7 @@ class _FormPageState extends State<FormPage> {
                                                     TextEditingController());
                                                 precoUnitarioControllers.add(
                                                     TextEditingController());
-                                                parcelaPAAControllers.add(
-                                                    TextEditingController());
-                                                parcelaMercadosLocaisControllers
-                                                    .add(
-                                                        TextEditingController());
-                                                parcelaOutrosEstadosControllers
-                                                    .add(
-                                                        TextEditingController());
                                                 parcelaCosumoControllers.add(
-                                                    TextEditingController());
-                                                valorCosumoControllers.add(
                                                     TextEditingController());
                                               } else {
                                                 int index = _selectedVegetais
@@ -1136,15 +1146,7 @@ class _FormPageState extends State<FormPage> {
                                                       .removeAt(index);
                                                   precoUnitarioControllers
                                                       .removeAt(index);
-                                                  parcelaPAAControllers
-                                                      .removeAt(index);
-                                                  parcelaMercadosLocaisControllers
-                                                      .removeAt(index);
-                                                  parcelaOutrosEstadosControllers
-                                                      .removeAt(index);
                                                   parcelaCosumoControllers
-                                                      .removeAt(index);
-                                                  valorCosumoControllers
                                                       .removeAt(index);
                                                 }
                                               }
@@ -1664,13 +1666,625 @@ class _FormPageState extends State<FormPage> {
                               ),
                             ],
                           ),
+                        const Divider(
+                          thickness: 1,
+                        ),
                         const Padding(
                           padding: EdgeInsets.all(20.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                'A sua família criou Animais?',
+                                'A unidade familiar produziu \nprocessados/beneficiados de origem vegetal?',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Radio<bool>(
+                              value: true,
+                              groupValue: _produziuProcessadosVegetais,
+                              onChanged: (value) {
+                                setState(() {
+                                  _produziuProcessadosVegetais = value!;
+                                });
+                              },
+                            ),
+                            const Text('Sim'),
+                            Radio<bool>(
+                              value: false,
+                              groupValue: _produziuProcessadosVegetais,
+                              onChanged: (value) {
+                                setState(() {
+                                  _produziuProcessadosVegetais = value!;
+                                  _selectedProcessadosVegetais.clear();
+                                });
+                              },
+                            ),
+                            const Text('Não'),
+                          ],
+                        ),
+                        if (_produziuProcessadosVegetais)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.all(20.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Quantidade de itens produzidos:',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: DropdownButton<int>(
+                                  elevation: 3,
+                                  isDense: true,
+                                  dropdownColor: Colors.white,
+                                  focusColor: Colors.white,
+                                  value:
+                                      _quantidadeProcessadosVegetaisProduzidos,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _quantidadeProcessadosVegetaisProduzidos =
+                                          value!;
+                                      _selectedProcessadosVegetais.clear();
+                                    });
+                                  },
+                                  items: List.generate(10, (index) {
+                                    final quantidade = index + 1;
+                                    return DropdownMenuItem<int>(
+                                      value: quantidade,
+                                      child: Text('$quantidade'),
+                                    );
+                                  }),
+                                ),
+                              ),
+                            ],
+                          ),
+                        if (_produziuProcessadosVegetais &&
+                            _quantidadeProcessadosVegetaisProduzidos > 0)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.all(20.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Selecionar processados vegetais:',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Column(
+                                children: List.generate(
+                                    _quantidadeProcessadosVegetaisProduzidos,
+                                    (index) {
+                                  final selectedProcessadoVegetal =
+                                      _selectedProcessadosVegetais.length >
+                                              index
+                                          ? _selectedProcessadosVegetais[index]
+                                          : null;
+                                  final areaProcessadosVegetaisController =
+                                      areaProcessadosVegetalControllers.length > index
+                                          ? areaProcessadosVegetalControllers[index]
+                                          : null;
+                                  final volumeProcessadosVegetalController =
+                                      volumeProcessadosVegetalControllers.length > index
+                                          ? volumeProcessadosVegetalControllers[index]
+                                          : null;
+                                  final quantidadeProduzidaProcessadosVegetalController =
+                                      quantidadeProduzidaProcessadosVegetalControllers.length >
+                                              index
+                                          ? quantidadeProduzidaProcessadosVegetalControllers[index]
+                                          : null;
+                                  final quantidadeVendidaProcessadosVegetalController =
+                                      quantidadeVendidaProcessadosVegetalControllers.length >
+                                              index
+                                          ? quantidadeVendidaProcessadosVegetalControllers[index]
+                                          : null;
+                                  final precoProcessadosVegetalUnitarioController =
+                                      precoProcessadosVegetalUnitarioControllers.length > index
+                                          ? precoProcessadosVegetalUnitarioControllers[index]
+                                          : null;
+                                  final parcelaProcessadosVegetalCosumoController =
+                                      parcelaProcessadosVegetalCosumoControllers.length > index
+                                          ? parcelaProcessadosVegetalCosumoControllers[index]
+                                          : null;
+                                  return Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: DropdownSearch<String>(
+                                          popupProps: PopupProps.dialog(
+                                              fit: FlexFit.tight,
+                                              showSelectedItems: true,
+                                              showSearchBox: true,
+                                              scrollbarProps: ScrollbarProps()),
+                                          items: ProcessadosRepository
+                                              .listProcessadosVegetais,
+                                          dropdownDecoratorProps:
+                                              DropDownDecoratorProps(
+                                            dropdownSearchDecoration:
+                                                InputDecoration(
+                                              filled: true,
+                                              fillColor: Colors.white,
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                                borderSide: const BorderSide(
+                                                    width: 0.8,
+                                                    color: Colors.white),
+                                              ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                                borderSide: const BorderSide(
+                                                    width: 0.8,
+                                                    color: Colors.white),
+                                              ),
+                                              errorBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                                borderSide: const BorderSide(
+                                                    width: 0.5,
+                                                    color: Colors.red),
+                                              ),
+                                              hintText:
+                                                  'Selecione o Processado Vegetal',
+                                              labelText:
+                                                  'Selecione o Processado Vegetal',
+                                            ),
+                                          ),
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return 'Selecione o Processado Vegetal';
+                                            }
+                                            return null; // Retorna null se o campo estiver preenchido corretamente
+                                          },
+                                          onChanged: (value) {
+                                            setState(() {
+                                              if (value != null &&
+                                                  !_selectedProcessadosVegetais
+                                                      .contains(value)) {
+                                                _selectedProcessadosVegetais
+                                                    .add(value);
+                                                areaProcessadosVegetalControllers.add(
+                                                    TextEditingController());
+                                                volumeProcessadosVegetalControllers.add(
+                                                    TextEditingController());
+                                                quantidadeProduzidaProcessadosVegetalControllers.add(
+                                                    TextEditingController());
+                                                quantidadeVendidaProcessadosVegetalControllers.add(
+                                                    TextEditingController());
+                                                precoProcessadosVegetalUnitarioControllers.add(
+                                                    TextEditingController());
+                                                parcelaProcessadosVegetalCosumoControllers.add(
+                                                    TextEditingController());
+                                              } else {
+                                                int index =
+                                                    _selectedProcessadosVegetais
+                                                        .indexOf(value!);
+                                                if (index != -1) {
+                                                  _selectedProcessadosVegetais
+                                                      .removeAt(index);
+                                                  areaProcessadosVegetalControllers
+                                                      .removeAt(index);
+                                                  volumeProcessadosVegetalControllers
+                                                      .removeAt(index);
+                                                  quantidadeProduzidaProcessadosVegetalControllers
+                                                      .removeAt(index);
+                                                  quantidadeVendidaProcessadosVegetalControllers
+                                                      .removeAt(index);
+                                                  precoProcessadosVegetalUnitarioControllers
+                                                      .removeAt(index);
+                                                  parcelaProcessadosVegetalCosumoControllers
+                                                      .removeAt(index);
+                                                }
+                                              }
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      if (selectedProcessadoVegetal != null)
+                                        Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Column(
+                                            children: [
+                                              const Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 10.0,
+                                                    top: 10,
+                                                    bottom: 10),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Total de área destinada à produção (Hectares)',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 15),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              TextFormField(
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                controller: areaProcessadosVegetaisController,
+                                                validator: (value) =>
+                                                    value != null &&
+                                                            value.isEmpty
+                                                        ? 'Preencha o Campo'
+                                                        : null,
+                                                decoration: InputDecoration(
+                                                  filled: true,
+                                                  fillColor: Colors.white,
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
+                                                  ),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
+                                                  ),
+                                                  errorBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.5,
+                                                            color: Colors.red),
+                                                  ),
+                                                  labelText:
+                                                      'Área destinada à produção (ha)',
+                                                ),
+                                              ),
+                                              const Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 10.0,
+                                                    top: 20,
+                                                    bottom: 10),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Quantidade Colhida (Quilogramas)',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 15),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              TextFormField(
+                                                validator: (value) =>
+                                                    value != null &&
+                                                            value.isEmpty
+                                                        ? 'Preencha o Campo'
+                                                        : null,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                controller:
+                                                quantidadeProduzidaProcessadosVegetalController,
+                                                decoration: InputDecoration(
+                                                  filled: true,
+                                                  fillColor: Colors.white,
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
+                                                  ),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
+                                                  ),
+                                                  errorBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.5,
+                                                            color: Colors.red),
+                                                  ),
+                                                  labelText:
+                                                      'Quantidade colhida (Kg)',
+                                                ),
+                                              ),
+                                              const Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 10.0,
+                                                    top: 20,
+                                                    bottom: 10),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Quantidade Vendida (Quilogramas)',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 15),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              TextFormField(
+                                                validator: (value) {
+                                                  if (value == null ||
+                                                      value.isEmpty) {
+                                                    return 'Preencha o Campo';
+                                                  }
+
+                                                  int? quantidadeColhida =
+                                                      int.tryParse(
+                                                          quantidadeProduzidaProcessadosVegetalController!
+                                                              .text);
+                                                  int? quantidadeVendida =
+                                                      int.tryParse(value);
+
+                                                  if (quantidadeVendida! >
+                                                      quantidadeColhida!) {
+                                                    return 'A quantidade vendida não pode ser maior\n que a quantidade colhida';
+                                                  }
+
+                                                  return null;
+                                                },
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                controller:
+                                                quantidadeVendidaProcessadosVegetalController,
+                                                decoration: InputDecoration(
+                                                  filled: true,
+                                                  fillColor: Colors.white,
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
+                                                  ),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
+                                                  ),
+                                                  errorBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.5,
+                                                            color: Colors.red),
+                                                  ),
+                                                  labelText:
+                                                      'Quantidade vendida (Kg)',
+                                                ),
+                                              ),
+                                              const Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 10.0,
+                                                    top: 20,
+                                                    bottom: 10),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Preço Unitário',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 15),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              TextFormField(
+                                                validator: (value) =>
+                                                    value != null &&
+                                                            value.isEmpty
+                                                        ? 'Preencha o Campo'
+                                                        : null,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                controller:
+                                                precoProcessadosVegetalUnitarioController,
+                                                decoration: InputDecoration(
+                                                  filled: true,
+                                                  fillColor: Colors.white,
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
+                                                  ),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
+                                                  ),
+                                                  errorBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.5,
+                                                            color: Colors.red),
+                                                  ),
+                                                  labelText:
+                                                      'Preço unitário (R\$)',
+                                                ),
+                                              ),
+                                              const Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 10.0,
+                                                    top: 20,
+                                                    bottom: 10),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Parcela da Produção destinada \nao consumo próprio (Quilogramas)',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 15),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              TextFormField(
+                                                validator: (value) =>
+                                                    value != null &&
+                                                            value.isEmpty
+                                                        ? 'Preencha o Campo'
+                                                        : null,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                controller:
+                                                parcelaProcessadosVegetalCosumoController,
+                                                decoration: InputDecoration(
+                                                  filled: true,
+                                                  fillColor: Colors.white,
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
+                                                  ),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
+                                                  ),
+                                                  errorBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.5,
+                                                            color: Colors.red),
+                                                  ),
+                                                  labelText:
+                                                      'Parcela da produção destinada ao consumo familiar (Kg)',
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 20,
+                                              ),
+                                              const Divider(
+                                                thickness: 2,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                    ],
+                                  );
+                                }),
+                              ),
+                            ],
+                          ),
+                        const Divider(
+                          thickness: 1,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.all(20.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                'A unidade familiar criou Animais?',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -1771,7 +2385,7 @@ class _FormPageState extends State<FormPage> {
                                 children: List.generate(
                                     _quantidadeAnimaisCriados, (index) {
                                   final selectedAnimal =
-                                  _selectedAnimais.length > index
+                                      _selectedAnimais.length > index
                                           ? _selectedAnimais[index]
                                           : null;
                                   final areaAnimalController =
@@ -1783,17 +2397,23 @@ class _FormPageState extends State<FormPage> {
                                           ? volumeAnimalControllers[index]
                                           : null;
                                   final quantidadeVendidaAnimalController =
-                                      quantidadeAnimalVendidoControllers.length >
+                                      quantidadeAnimalVendidoControllers
+                                                  .length >
                                               index
-                                          ? quantidadeAnimalVendidoControllers[index]
+                                          ? quantidadeAnimalVendidoControllers[
+                                              index]
                                           : null;
                                   final precoUnitarioAnimalController =
-                                      precoAnimalUnitarioControllers.length > index
-                                          ? precoAnimalUnitarioControllers[index]
+                                      precoAnimalUnitarioControllers.length >
+                                              index
+                                          ? precoAnimalUnitarioControllers[
+                                              index]
                                           : null;
                                   final parcelaAnimalConsumoController =
-                                      parcelaAnimalCosumoControllers.length > index
-                                          ? parcelaAnimalCosumoControllers[index]
+                                      parcelaAnimalCosumoControllers.length >
+                                              index
+                                          ? parcelaAnimalCosumoControllers[
+                                              index]
                                           : null;
                                   return Column(
                                     children: [
@@ -1854,12 +2474,15 @@ class _FormPageState extends State<FormPage> {
                                                     TextEditingController());
                                                 volumeAnimalControllers.add(
                                                     TextEditingController());
-                                                quantidadeAnimalVendidoControllers.add(
-                                                    TextEditingController());
-                                                precoAnimalUnitarioControllers.add(
-                                                    TextEditingController());
-                                                parcelaAnimalCosumoControllers.add(
-                                                    TextEditingController());
+                                                quantidadeAnimalVendidoControllers
+                                                    .add(
+                                                        TextEditingController());
+                                                precoAnimalUnitarioControllers
+                                                    .add(
+                                                        TextEditingController());
+                                                parcelaAnimalCosumoControllers
+                                                    .add(
+                                                        TextEditingController());
                                               } else {
                                                 int index = _selectedAnimais
                                                     .indexOf(value!);
@@ -2010,7 +2633,8 @@ class _FormPageState extends State<FormPage> {
                                               TextFormField(
                                                 keyboardType:
                                                     TextInputType.number,
-                                                controller: areaAnimalController,
+                                                controller:
+                                                    areaAnimalController,
                                                 validator: (value) =>
                                                     value != null &&
                                                             value.isEmpty
@@ -2393,89 +3017,93 @@ class _FormPageState extends State<FormPage> {
                               ),
                             ],
                           ),
+                        const Divider(
+                          thickness: 1,
+                        ),
                         const Padding(
-                          padding: EdgeInsets.only(
-                              left: 20.0,
-                              top: 20,
-                              bottom: 10),
+                          padding:
+                              EdgeInsets.only(left: 20.0, top: 20, bottom: 10),
                           child: SizedBox(
                             child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text(
                                   'Assinale todos os canais de comercialização da \n'
-                                      'produção na unidade familiar, \n'
-                                      'segundo sua ordem de importância',
+                                  'produção na unidade familiar, \n'
+                                  'segundo sua ordem de importância',
                                   style: TextStyle(
-                                      fontWeight:
-                                      FontWeight.bold,
+                                      fontWeight: FontWeight.bold,
                                       fontSize: 15,
-                                      overflow:
-                                      TextOverflow
-                                          .ellipsis),
+                                      overflow: TextOverflow.ellipsis),
                                 ),
                               ],
                             ),
                           ),
                         ),
-                        ExpansionTile(title: Text('Canais'),
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * .5,
-                            child: ListView.separated(
-                              separatorBuilder: (_, __) => const Divider(
-                                thickness: 1.0,
-                              ),
-                              itemCount: UnidadeFamiliarRepository
-                                  .canaisComercializacao.length,
-                              itemBuilder:
-                                  (BuildContext context, int moeda) {
-                                return ListTile(
-                                  title: Text(UnidadeFamiliarRepository
-                                      .canaisComercializacao[moeda].nome,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold
-                                  ),),
-                                  trailing: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text("Importância:"),
-                                      SizedBox(width: 8),
-                                      Container(
-                                        width: 50,
-                                        child: TextField(
-                                          keyboardType:
-                                          TextInputType.number,
-                                          onChanged: (value) {
-                                            int importance =
-                                                int.tryParse(value) ?? 0;
-                                            setState(() {
-                                              importances[moeda] =
-                                                  importance;
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  leading: Checkbox(
-                                    value: importances[moeda] > 0,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        importances[moeda] = value as int;
-                                      });
-                                    },
-                                  ),
-                                );
-                              },
-                            ),
+                        ExpansionTile(
+                          title: Text(
+                            'Canais de comercialização',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w300, fontSize: 16),
                           ),
-                        ],)
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height * .5,
+                              child: ListView.separated(
+                                separatorBuilder: (_, __) => const Divider(
+                                  thickness: 1.0,
+                                ),
+                                itemCount: UnidadeFamiliarRepository
+                                    .canaisComercializacao.length,
+                                itemBuilder: (BuildContext context, int moeda) {
+                                  return ListTile(
+                                    title: Text(
+                                      UnidadeFamiliarRepository
+                                          .canaisComercializacao[moeda].nome,
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    trailing: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text("Importância:"),
+                                        SizedBox(width: 8),
+                                        Container(
+                                          width: 50,
+                                          child: TextField(
+                                            keyboardType: TextInputType.number,
+                                            onChanged: (value) {
+                                              int importance =
+                                                  int.tryParse(value) ?? 0;
+                                              setState(() {
+                                                importances[moeda] = importance;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    leading: Checkbox(
+                                      value: importances[moeda] > 0,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          importances[moeda] = value as int;
+                                        });
+                                      },
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        )
                       ],
                     ),
+                  ),
+                  const Divider(
+                    thickness: 1,
                   ),
                   Padding(
                     padding: const EdgeInsets.all(20.0),
