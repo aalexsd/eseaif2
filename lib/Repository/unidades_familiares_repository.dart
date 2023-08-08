@@ -36,5 +36,23 @@ class UnidadeFamiliarRepository {
     UnidadeFamiliar(nome: 'Selos distintos'),
   ];
 
+  static List<UnidadeFamiliar> canaisComercializacao = [
+    UnidadeFamiliar(nome: 'Cooperativas da agricultura familiar'),
+    UnidadeFamiliar(nome: 'Agroindústrias da agricultura familiar'),
+    UnidadeFamiliar(nome: 'Cooperativas não enquadradas como de agricultura familiar'),
+    UnidadeFamiliar(nome: 'Agroindústrias ou indústrias não enquadradas como de agricultura familiar'),
+    UnidadeFamiliar(nome: 'Bares, restaurantes, lanchonetes e hotéis'),
+    UnidadeFamiliar(nome: 'Exportação ou empresas exportadoras (comercialização para outros países)'),
+    UnidadeFamiliar(nome: 'Feiras'),
+    UnidadeFamiliar(nome: 'Mercados/ supermercados de outros Estados'),
+    UnidadeFamiliar(nome: 'Mercados/ supermercados de outros municípios de Mato Grosso'),
+    UnidadeFamiliar(nome: 'Mercados/ supermercados/quitandas do município'),
+    UnidadeFamiliar(nome: 'Programa de Aquisição de Alimentos - PAA'),
+    UnidadeFamiliar(nome: 'Programa Nacional de Alimentação Escolar - PNAE'),
+    UnidadeFamiliar(nome: 'Revendedores/ atravessadores/ intermediários'),
+    UnidadeFamiliar(nome: 'Venda direta para o consumidor final'),
+    UnidadeFamiliar(nome: 'Vendas para órgãos públicos em geral (compras governamentais)'),
+  ];
+
 
 }
