@@ -69,6 +69,15 @@ class _FormPageState extends State<FormPage> {
   List<TextEditingController> precoProcessadosVegetalUnitarioControllers = [];
   List<TextEditingController> parcelaProcessadosVegetalCosumoControllers = [];
 
+  List<TextEditingController> areaProcessadosAnimalControllers = [];
+  List<TextEditingController> volumeProcessadosAnimalControllers = [];
+  List<TextEditingController> quantidadeProduzidaProcessadosAnimalControllers =
+      [];
+  List<TextEditingController> quantidadeVendidaProcessadosAnimalControllers =
+      [];
+  List<TextEditingController> precoProcessadosAnimalUnitarioControllers = [];
+  List<TextEditingController> parcelaProcessadosAnimalCosumoControllers = [];
+
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -94,6 +103,7 @@ class _FormPageState extends State<FormPage> {
   bool _possuiCAR = false;
   bool _produziuVegetais = false;
   bool _produziuProcessadosVegetais = false;
+  bool _produziuProcessadosAnimais = false;
   bool _criouAnimais = false;
   final List<String> _selectedInstitutions = [];
   final List<String> _selectedSelos = [];
@@ -103,9 +113,11 @@ class _FormPageState extends State<FormPage> {
   final List<String> _selectedActivities = [];
   final List<String> _selectedVegetais = [];
   final List<String> _selectedProcessadosVegetais = [];
+  final List<String> _selectedProcessadosAnimais = [];
   final List<String> _selectedAnimais = [];
   int _quantidadeVegetaisProduzidos = 1;
   int _quantidadeProcessadosVegetaisProduzidos = 1;
+  int _quantidadeProcessadosAnimaisProduzidos = 1;
   int _quantidadeAnimaisCriados = 1;
   List<int> importances = List<int>.filled(16, 0);
 
@@ -1154,107 +1166,6 @@ class _FormPageState extends State<FormPage> {
                                           },
                                         ),
                                       ),
-                                      // Padding(
-                                      //   padding: const EdgeInsets.all(10.0),
-                                      //   child: DropdownButtonFormField<String>(
-                                      //     menuMaxHeight: 500,
-                                      //     decoration: InputDecoration(
-                                      //       filled: true,
-                                      //       fillColor: Colors.white,
-                                      //       border: OutlineInputBorder(
-                                      //         borderRadius:
-                                      //             BorderRadius.circular(30),
-                                      //         borderSide: const BorderSide(
-                                      //             width: 0.8,
-                                      //             color: Colors.white),
-                                      //       ),
-                                      //       enabledBorder: OutlineInputBorder(
-                                      //         borderRadius:
-                                      //             BorderRadius.circular(30),
-                                      //         borderSide: const BorderSide(
-                                      //             width: 0.8,
-                                      //             color: Colors.white),
-                                      //       ),
-                                      //       errorBorder: OutlineInputBorder(
-                                      //         borderRadius:
-                                      //             BorderRadius.circular(30),
-                                      //         borderSide: const BorderSide(
-                                      //             width: 0.5, color: Colors.red),
-                                      //       ),
-                                      //       hintText: 'Selecione o Vegetal',
-                                      //       labelText: 'Selecione o Vegetal',
-                                      //     ),
-                                      //     isExpanded: true,
-                                      //     value: selectedVegetal,
-                                      //     onChanged: (value) {
-                                      //       setState(() {
-                                      //         if (value != null &&
-                                      //             !_selectedVegetais
-                                      //                 .contains(value)) {
-                                      //           _selectedVegetais.add(value);
-                                      //           areaPuraControllers
-                                      //               .add(TextEditingController());
-                                      //           areaConsorciadaControllers
-                                      //               .add(TextEditingController());
-                                      //           quantidadeColhidaControllers
-                                      //               .add(TextEditingController());
-                                      //           quantidadeVendidaControllers
-                                      //               .add(TextEditingController());
-                                      //           precoUnitarioControllers
-                                      //               .add(TextEditingController());
-                                      //           parcelaPAAControllers
-                                      //               .add(TextEditingController());
-                                      //           parcelaMercadosLocaisControllers
-                                      //               .add(TextEditingController());
-                                      //           parcelaOutrosEstadosControllers
-                                      //               .add(TextEditingController());
-                                      //           parcelaCosumoControllers
-                                      //               .add(TextEditingController());
-                                      //           valorCosumoControllers
-                                      //               .add(TextEditingController());
-                                      //         } else {
-                                      //           int index = _selectedVegetais
-                                      //               .indexOf(value!);
-                                      //           if (index != -1) {
-                                      //             _selectedVegetais
-                                      //                 .removeAt(index);
-                                      //             areaPuraControllers
-                                      //                 .removeAt(index);
-                                      //             areaConsorciadaControllers
-                                      //                 .removeAt(index);
-                                      //             quantidadeColhidaControllers
-                                      //                 .removeAt(index);
-                                      //             quantidadeVendidaControllers
-                                      //                 .removeAt(index);
-                                      //             precoUnitarioControllers
-                                      //                 .removeAt(index);
-                                      //             parcelaPAAControllers
-                                      //                 .removeAt(index);
-                                      //             parcelaMercadosLocaisControllers
-                                      //                 .removeAt(index);
-                                      //             parcelaOutrosEstadosControllers
-                                      //                 .removeAt(index);
-                                      //             parcelaCosumoControllers
-                                      //                 .removeAt(index);
-                                      //             valorCosumoControllers
-                                      //                 .removeAt(index);
-                                      //           }
-                                      //         }
-                                      //       });
-                                      //     },
-                                      //     items: VegetaisRepository.listVegetais
-                                      //         .map((vegetal) {
-                                      //       return DropdownMenuItem<String>(
-                                      //         value: vegetal.nome,
-                                      //         child: Text(
-                                      //           vegetal.nome,
-                                      //           style:
-                                      //               const TextStyle(fontSize: 14),
-                                      //         ),
-                                      //       );
-                                      //     }).toList(),
-                                      //   ),
-                                      // ),
                                       if (selectedVegetal != null)
                                         Padding(
                                           padding: const EdgeInsets.all(10.0),
@@ -1494,48 +1405,6 @@ class _FormPageState extends State<FormPage> {
                                                   ],
                                                 ),
                                               ),
-                                              // TextFormField(
-                                              //   decoration: InputDecoration(
-                                              //     filled: true,
-                                              //     fillColor: Colors.white,
-                                              //     border: OutlineInputBorder(
-                                              //       borderRadius:
-                                              //           BorderRadius.circular(
-                                              //               30),
-                                              //       borderSide:
-                                              //           const BorderSide(
-                                              //               width: 0.8,
-                                              //               color:
-                                              //                   Colors.white),
-                                              //     ),
-                                              //     enabledBorder:
-                                              //         OutlineInputBorder(
-                                              //       borderRadius:
-                                              //           BorderRadius.circular(
-                                              //               30),
-                                              //       borderSide:
-                                              //           const BorderSide(
-                                              //               width: 0.8,
-                                              //               color:
-                                              //                   Colors.white),
-                                              //     ),
-                                              //     errorBorder:
-                                              //         OutlineInputBorder(
-                                              //       borderRadius:
-                                              //           BorderRadius.circular(
-                                              //               30),
-                                              //       borderSide:
-                                              //           const BorderSide(
-                                              //               width: 0.5,
-                                              //               color: Colors.red),
-                                              //     ),
-                                              //     labelText:
-                                              //         'Unidade da quantidade (Chave 2)',
-                                              //   ),
-                                              // ),
-                                              // const SizedBox(
-                                              //   height: 20,
-                                              // ),
                                               TextFormField(
                                                 validator: (value) =>
                                                     value != null &&
@@ -1785,30 +1654,45 @@ class _FormPageState extends State<FormPage> {
                                           ? _selectedProcessadosVegetais[index]
                                           : null;
                                   final areaProcessadosVegetaisController =
-                                      areaProcessadosVegetalControllers.length > index
-                                          ? areaProcessadosVegetalControllers[index]
+                                      areaProcessadosVegetalControllers.length >
+                                              index
+                                          ? areaProcessadosVegetalControllers[
+                                              index]
                                           : null;
                                   final volumeProcessadosVegetalController =
-                                      volumeProcessadosVegetalControllers.length > index
-                                          ? volumeProcessadosVegetalControllers[index]
+                                      volumeProcessadosVegetalControllers
+                                                  .length >
+                                              index
+                                          ? volumeProcessadosVegetalControllers[
+                                              index]
                                           : null;
                                   final quantidadeProduzidaProcessadosVegetalController =
-                                      quantidadeProduzidaProcessadosVegetalControllers.length >
+                                      quantidadeProduzidaProcessadosVegetalControllers
+                                                  .length >
                                               index
-                                          ? quantidadeProduzidaProcessadosVegetalControllers[index]
+                                          ? quantidadeProduzidaProcessadosVegetalControllers[
+                                              index]
                                           : null;
                                   final quantidadeVendidaProcessadosVegetalController =
-                                      quantidadeVendidaProcessadosVegetalControllers.length >
+                                      quantidadeVendidaProcessadosVegetalControllers
+                                                  .length >
                                               index
-                                          ? quantidadeVendidaProcessadosVegetalControllers[index]
+                                          ? quantidadeVendidaProcessadosVegetalControllers[
+                                              index]
                                           : null;
                                   final precoProcessadosVegetalUnitarioController =
-                                      precoProcessadosVegetalUnitarioControllers.length > index
-                                          ? precoProcessadosVegetalUnitarioControllers[index]
+                                      precoProcessadosVegetalUnitarioControllers
+                                                  .length >
+                                              index
+                                          ? precoProcessadosVegetalUnitarioControllers[
+                                              index]
                                           : null;
                                   final parcelaProcessadosVegetalCosumoController =
-                                      parcelaProcessadosVegetalCosumoControllers.length > index
-                                          ? parcelaProcessadosVegetalCosumoControllers[index]
+                                      parcelaProcessadosVegetalCosumoControllers
+                                                  .length >
+                                              index
+                                          ? parcelaProcessadosVegetalCosumoControllers[
+                                              index]
                                           : null;
                                   return Column(
                                     children: [
@@ -1869,18 +1753,24 @@ class _FormPageState extends State<FormPage> {
                                                       .contains(value)) {
                                                 _selectedProcessadosVegetais
                                                     .add(value);
-                                                areaProcessadosVegetalControllers.add(
-                                                    TextEditingController());
-                                                volumeProcessadosVegetalControllers.add(
-                                                    TextEditingController());
-                                                quantidadeProduzidaProcessadosVegetalControllers.add(
-                                                    TextEditingController());
-                                                quantidadeVendidaProcessadosVegetalControllers.add(
-                                                    TextEditingController());
-                                                precoProcessadosVegetalUnitarioControllers.add(
-                                                    TextEditingController());
-                                                parcelaProcessadosVegetalCosumoControllers.add(
-                                                    TextEditingController());
+                                                areaProcessadosVegetalControllers
+                                                    .add(
+                                                        TextEditingController());
+                                                volumeProcessadosVegetalControllers
+                                                    .add(
+                                                        TextEditingController());
+                                                quantidadeProduzidaProcessadosVegetalControllers
+                                                    .add(
+                                                        TextEditingController());
+                                                quantidadeVendidaProcessadosVegetalControllers
+                                                    .add(
+                                                        TextEditingController());
+                                                precoProcessadosVegetalUnitarioControllers
+                                                    .add(
+                                                        TextEditingController());
+                                                parcelaProcessadosVegetalCosumoControllers
+                                                    .add(
+                                                        TextEditingController());
                                               } else {
                                                 int index =
                                                     _selectedProcessadosVegetais
@@ -1933,7 +1823,8 @@ class _FormPageState extends State<FormPage> {
                                               TextFormField(
                                                 keyboardType:
                                                     TextInputType.number,
-                                                controller: areaProcessadosVegetaisController,
+                                                controller:
+                                                    areaProcessadosVegetaisController,
                                                 validator: (value) =>
                                                     value != null &&
                                                             value.isEmpty
@@ -2005,7 +1896,7 @@ class _FormPageState extends State<FormPage> {
                                                 keyboardType:
                                                     TextInputType.number,
                                                 controller:
-                                                quantidadeProduzidaProcessadosVegetalController,
+                                                    quantidadeProduzidaProcessadosVegetalController,
                                                 decoration: InputDecoration(
                                                   filled: true,
                                                   fillColor: Colors.white,
@@ -2087,7 +1978,7 @@ class _FormPageState extends State<FormPage> {
                                                 keyboardType:
                                                     TextInputType.number,
                                                 controller:
-                                                quantidadeVendidaProcessadosVegetalController,
+                                                    quantidadeVendidaProcessadosVegetalController,
                                                 decoration: InputDecoration(
                                                   filled: true,
                                                   fillColor: Colors.white,
@@ -2154,7 +2045,7 @@ class _FormPageState extends State<FormPage> {
                                                 keyboardType:
                                                     TextInputType.number,
                                                 controller:
-                                                precoProcessadosVegetalUnitarioController,
+                                                    precoProcessadosVegetalUnitarioController,
                                                 decoration: InputDecoration(
                                                   filled: true,
                                                   fillColor: Colors.white,
@@ -2221,7 +2112,7 @@ class _FormPageState extends State<FormPage> {
                                                 keyboardType:
                                                     TextInputType.number,
                                                 controller:
-                                                parcelaProcessadosVegetalCosumoController,
+                                                    parcelaProcessadosVegetalCosumoController,
                                                 decoration: InputDecoration(
                                                   filled: true,
                                                   fillColor: Colors.white,
@@ -2505,107 +2396,6 @@ class _FormPageState extends State<FormPage> {
                                           },
                                         ),
                                       ),
-                                      // Padding(
-                                      //   padding: const EdgeInsets.all(10.0),
-                                      //   child: DropdownButtonFormField<String>(
-                                      //     menuMaxHeight: 500,
-                                      //     decoration: InputDecoration(
-                                      //       filled: true,
-                                      //       fillColor: Colors.white,
-                                      //       border: OutlineInputBorder(
-                                      //         borderRadius:
-                                      //             BorderRadius.circular(30),
-                                      //         borderSide: const BorderSide(
-                                      //             width: 0.8,
-                                      //             color: Colors.white),
-                                      //       ),
-                                      //       enabledBorder: OutlineInputBorder(
-                                      //         borderRadius:
-                                      //             BorderRadius.circular(30),
-                                      //         borderSide: const BorderSide(
-                                      //             width: 0.8,
-                                      //             color: Colors.white),
-                                      //       ),
-                                      //       errorBorder: OutlineInputBorder(
-                                      //         borderRadius:
-                                      //             BorderRadius.circular(30),
-                                      //         borderSide: const BorderSide(
-                                      //             width: 0.5, color: Colors.red),
-                                      //       ),
-                                      //       hintText: 'Selecione o Vegetal',
-                                      //       labelText: 'Selecione o Vegetal',
-                                      //     ),
-                                      //     isExpanded: true,
-                                      //     value: selectedVegetal,
-                                      //     onChanged: (value) {
-                                      //       setState(() {
-                                      //         if (value != null &&
-                                      //             !_selectedVegetais
-                                      //                 .contains(value)) {
-                                      //           _selectedVegetais.add(value);
-                                      //           areaPuraControllers
-                                      //               .add(TextEditingController());
-                                      //           areaConsorciadaControllers
-                                      //               .add(TextEditingController());
-                                      //           quantidadeColhidaControllers
-                                      //               .add(TextEditingController());
-                                      //           quantidadeVendidaControllers
-                                      //               .add(TextEditingController());
-                                      //           precoUnitarioControllers
-                                      //               .add(TextEditingController());
-                                      //           parcelaPAAControllers
-                                      //               .add(TextEditingController());
-                                      //           parcelaMercadosLocaisControllers
-                                      //               .add(TextEditingController());
-                                      //           parcelaOutrosEstadosControllers
-                                      //               .add(TextEditingController());
-                                      //           parcelaCosumoControllers
-                                      //               .add(TextEditingController());
-                                      //           valorCosumoControllers
-                                      //               .add(TextEditingController());
-                                      //         } else {
-                                      //           int index = _selectedVegetais
-                                      //               .indexOf(value!);
-                                      //           if (index != -1) {
-                                      //             _selectedVegetais
-                                      //                 .removeAt(index);
-                                      //             areaPuraControllers
-                                      //                 .removeAt(index);
-                                      //             areaConsorciadaControllers
-                                      //                 .removeAt(index);
-                                      //             quantidadeColhidaControllers
-                                      //                 .removeAt(index);
-                                      //             quantidadeVendidaControllers
-                                      //                 .removeAt(index);
-                                      //             precoUnitarioControllers
-                                      //                 .removeAt(index);
-                                      //             parcelaPAAControllers
-                                      //                 .removeAt(index);
-                                      //             parcelaMercadosLocaisControllers
-                                      //                 .removeAt(index);
-                                      //             parcelaOutrosEstadosControllers
-                                      //                 .removeAt(index);
-                                      //             parcelaCosumoControllers
-                                      //                 .removeAt(index);
-                                      //             valorCosumoControllers
-                                      //                 .removeAt(index);
-                                      //           }
-                                      //         }
-                                      //       });
-                                      //     },
-                                      //     items: VegetaisRepository.listVegetais
-                                      //         .map((vegetal) {
-                                      //       return DropdownMenuItem<String>(
-                                      //         value: vegetal.nome,
-                                      //         child: Text(
-                                      //           vegetal.nome,
-                                      //           style:
-                                      //               const TextStyle(fontSize: 14),
-                                      //         ),
-                                      //       );
-                                      //     }).toList(),
-                                      //   ),
-                                      // ),
                                       if (selectedAnimal != null)
                                         Padding(
                                           padding: const EdgeInsets.all(10.0),
@@ -2845,48 +2635,6 @@ class _FormPageState extends State<FormPage> {
                                                   ],
                                                 ),
                                               ),
-                                              // TextFormField(
-                                              //   decoration: InputDecoration(
-                                              //     filled: true,
-                                              //     fillColor: Colors.white,
-                                              //     border: OutlineInputBorder(
-                                              //       borderRadius:
-                                              //           BorderRadius.circular(
-                                              //               30),
-                                              //       borderSide:
-                                              //           const BorderSide(
-                                              //               width: 0.8,
-                                              //               color:
-                                              //                   Colors.white),
-                                              //     ),
-                                              //     enabledBorder:
-                                              //         OutlineInputBorder(
-                                              //       borderRadius:
-                                              //           BorderRadius.circular(
-                                              //               30),
-                                              //       borderSide:
-                                              //           const BorderSide(
-                                              //               width: 0.8,
-                                              //               color:
-                                              //                   Colors.white),
-                                              //     ),
-                                              //     errorBorder:
-                                              //         OutlineInputBorder(
-                                              //       borderRadius:
-                                              //           BorderRadius.circular(
-                                              //               30),
-                                              //       borderSide:
-                                              //           const BorderSide(
-                                              //               width: 0.5,
-                                              //               color: Colors.red),
-                                              //     ),
-                                              //     labelText:
-                                              //         'Unidade da quantidade (Chave 2)',
-                                              //   ),
-                                              // ),
-                                              // const SizedBox(
-                                              //   height: 20,
-                                              // ),
                                               TextFormField(
                                                 validator: (value) =>
                                                     value != null &&
@@ -3008,6 +2756,636 @@ class _FormPageState extends State<FormPage> {
                                               const Divider(
                                                 thickness: 2,
                                               )
+                                            ],
+                                          ),
+                                        ),
+                                    ],
+                                  );
+                                }),
+                              ),
+                            ],
+                          ),
+                        const Divider(
+                          thickness: 1,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.all(20.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                'A unidade familiar produziu \nprocessados/beneficiados de origem animal?',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Radio<bool>(
+                              value: true,
+                              groupValue: _produziuProcessadosAnimais,
+                              onChanged: (value) {
+                                setState(() {
+                                  _produziuProcessadosAnimais = value!;
+                                });
+                              },
+                            ),
+                            const Text('Sim'),
+                            Radio<bool>(
+                              value: false,
+                              groupValue: _produziuProcessadosAnimais,
+                              onChanged: (value) {
+                                setState(() {
+                                  _produziuProcessadosAnimais = value!;
+                                  _selectedProcessadosAnimais.clear();
+                                });
+                              },
+                            ),
+                            const Text('Não'),
+                          ],
+                        ),
+                        if (_produziuProcessadosAnimais)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.all(20.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Quantidade de itens produzidos:',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: DropdownButton<int>(
+                                  elevation: 3,
+                                  isDense: true,
+                                  dropdownColor: Colors.white,
+                                  focusColor: Colors.white,
+                                  value:
+                                      _quantidadeProcessadosAnimaisProduzidos,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _quantidadeProcessadosAnimaisProduzidos =
+                                          value!;
+                                      _selectedProcessadosAnimais.clear();
+                                    });
+                                  },
+                                  items: List.generate(10, (index) {
+                                    final quantidade = index + 1;
+                                    return DropdownMenuItem<int>(
+                                      value: quantidade,
+                                      child: Text('$quantidade'),
+                                    );
+                                  }),
+                                ),
+                              ),
+                            ],
+                          ),
+                        if (_produziuProcessadosAnimais &&
+                            _quantidadeProcessadosAnimaisProduzidos > 0)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.all(20.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Selecionar processados animais:',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Column(
+                                children: List.generate(
+                                    _quantidadeProcessadosAnimaisProduzidos,
+                                    (index) {
+                                  final selectedProcessadoAnimal =
+                                      _selectedProcessadosAnimais.length > index
+                                          ? _selectedProcessadosAnimais[index]
+                                          : null;
+                                  final areaProcessadosAnimaisController =
+                                      areaProcessadosAnimalControllers.length >
+                                              index
+                                          ? areaProcessadosAnimalControllers[
+                                              index]
+                                          : null;
+                                  final volumeProcessadosAnimalController =
+                                      volumeProcessadosAnimalControllers
+                                                  .length >
+                                              index
+                                          ? volumeProcessadosAnimalControllers[
+                                              index]
+                                          : null;
+                                  final quantidadeProduzidaProcessadosAnimalController =
+                                      quantidadeProduzidaProcessadosAnimalControllers
+                                                  .length >
+                                              index
+                                          ? quantidadeProduzidaProcessadosAnimalControllers[
+                                              index]
+                                          : null;
+                                  final quantidadeVendidaProcessadosAnimalController =
+                                      quantidadeVendidaProcessadosAnimalControllers
+                                                  .length >
+                                              index
+                                          ? quantidadeVendidaProcessadosAnimalControllers[
+                                              index]
+                                          : null;
+                                  final precoProcessadosAnimalUnitarioController =
+                                      precoProcessadosAnimalUnitarioControllers
+                                                  .length >
+                                              index
+                                          ? precoProcessadosAnimalUnitarioControllers[
+                                              index]
+                                          : null;
+                                  final parcelaProcessadosAnimalCosumoController =
+                                      parcelaProcessadosAnimalCosumoControllers
+                                                  .length >
+                                              index
+                                          ? parcelaProcessadosAnimalCosumoControllers[
+                                              index]
+                                          : null;
+                                  return Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: DropdownSearch<String>(
+                                          popupProps: PopupProps.dialog(
+                                              fit: FlexFit.tight,
+                                              showSelectedItems: true,
+                                              showSearchBox: true,
+                                              scrollbarProps: ScrollbarProps()),
+                                          items: ProcessadosRepository
+                                              .listProcessadosAnimal,
+                                          dropdownDecoratorProps:
+                                              DropDownDecoratorProps(
+                                            dropdownSearchDecoration:
+                                                InputDecoration(
+                                              filled: true,
+                                              fillColor: Colors.white,
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                                borderSide: const BorderSide(
+                                                    width: 0.8,
+                                                    color: Colors.white),
+                                              ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                                borderSide: const BorderSide(
+                                                    width: 0.8,
+                                                    color: Colors.white),
+                                              ),
+                                              errorBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                                borderSide: const BorderSide(
+                                                    width: 0.5,
+                                                    color: Colors.red),
+                                              ),
+                                              hintText:
+                                                  'Selecione o Processado Animal',
+                                              labelText:
+                                                  'Selecione o Processado Animal',
+                                            ),
+                                          ),
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return 'Selecione o Processado Animal';
+                                            }
+                                            return null; // Retorna null se o campo estiver preenchido corretamente
+                                          },
+                                          onChanged: (value) {
+                                            setState(() {
+                                              if (value != null &&
+                                                  !_selectedProcessadosAnimais
+                                                      .contains(value)) {
+                                                _selectedProcessadosAnimais
+                                                    .add(value);
+                                                areaProcessadosAnimalControllers
+                                                    .add(
+                                                        TextEditingController());
+                                                volumeProcessadosAnimalControllers
+                                                    .add(
+                                                        TextEditingController());
+                                                quantidadeProduzidaProcessadosAnimalControllers
+                                                    .add(
+                                                        TextEditingController());
+                                                quantidadeVendidaProcessadosAnimalControllers
+                                                    .add(
+                                                        TextEditingController());
+                                                precoProcessadosAnimalUnitarioControllers
+                                                    .add(
+                                                        TextEditingController());
+                                                parcelaProcessadosAnimalCosumoControllers
+                                                    .add(
+                                                        TextEditingController());
+                                              } else {
+                                                int index =
+                                                    _selectedProcessadosAnimais
+                                                        .indexOf(value!);
+                                                if (index != -1) {
+                                                  _selectedProcessadosAnimais
+                                                      .removeAt(index);
+                                                  areaProcessadosAnimalControllers
+                                                      .removeAt(index);
+                                                  volumeProcessadosAnimalControllers
+                                                      .removeAt(index);
+                                                  quantidadeProduzidaProcessadosAnimalControllers
+                                                      .removeAt(index);
+                                                  quantidadeVendidaProcessadosAnimalControllers
+                                                      .removeAt(index);
+                                                  precoProcessadosAnimalUnitarioControllers
+                                                      .removeAt(index);
+                                                  parcelaProcessadosAnimalCosumoControllers
+                                                      .removeAt(index);
+                                                }
+                                              }
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      if (selectedProcessadoAnimal != null)
+                                        Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Column(
+                                            children: [
+                                              const Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 10.0,
+                                                    top: 10,
+                                                    bottom: 10),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Total de área destinada à produção (Hectares)',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 15),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              TextFormField(
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                controller:
+                                                    areaProcessadosAnimaisController,
+                                                validator: (value) =>
+                                                    value != null &&
+                                                            value.isEmpty
+                                                        ? 'Preencha o Campo'
+                                                        : null,
+                                                decoration: InputDecoration(
+                                                  filled: true,
+                                                  fillColor: Colors.white,
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
+                                                  ),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
+                                                  ),
+                                                  errorBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.5,
+                                                            color: Colors.red),
+                                                  ),
+                                                  labelText:
+                                                      'Área destinada à produção (ha)',
+                                                ),
+                                              ),
+                                              const Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 10.0,
+                                                    top: 20,
+                                                    bottom: 10),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Quantidade Colhida (Quilogramas)',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 15),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              TextFormField(
+                                                validator: (value) =>
+                                                    value != null &&
+                                                            value.isEmpty
+                                                        ? 'Preencha o Campo'
+                                                        : null,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                controller:
+                                                    quantidadeProduzidaProcessadosAnimalController,
+                                                decoration: InputDecoration(
+                                                  filled: true,
+                                                  fillColor: Colors.white,
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
+                                                  ),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
+                                                  ),
+                                                  errorBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.5,
+                                                            color: Colors.red),
+                                                  ),
+                                                  labelText:
+                                                      'Quantidade colhida (Kg)',
+                                                ),
+                                              ),
+                                              const Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 10.0,
+                                                    top: 20,
+                                                    bottom: 10),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Quantidade Vendida (Quilogramas)',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 15),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              TextFormField(
+                                                validator: (value) {
+                                                  if (value == null ||
+                                                      value.isEmpty) {
+                                                    return 'Preencha o Campo';
+                                                  }
+
+                                                  int? quantidadeColhida =
+                                                      int.tryParse(
+                                                          quantidadeProduzidaProcessadosAnimalController!
+                                                              .text);
+                                                  int? quantidadeVendida =
+                                                      int.tryParse(value);
+
+                                                  if (quantidadeVendida! >
+                                                      quantidadeColhida!) {
+                                                    return 'A quantidade vendida não pode ser maior\n que a quantidade colhida';
+                                                  }
+
+                                                  return null;
+                                                },
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                controller:
+                                                    quantidadeVendidaProcessadosAnimalController,
+                                                decoration: InputDecoration(
+                                                  filled: true,
+                                                  fillColor: Colors.white,
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
+                                                  ),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
+                                                  ),
+                                                  errorBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.5,
+                                                            color: Colors.red),
+                                                  ),
+                                                  labelText:
+                                                      'Quantidade vendida (Kg)',
+                                                ),
+                                              ),
+                                              const Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 10.0,
+                                                    top: 20,
+                                                    bottom: 10),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Preço Unitário',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 15),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              TextFormField(
+                                                validator: (value) =>
+                                                    value != null &&
+                                                            value.isEmpty
+                                                        ? 'Preencha o Campo'
+                                                        : null,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                controller:
+                                                    precoProcessadosAnimalUnitarioController,
+                                                decoration: InputDecoration(
+                                                  filled: true,
+                                                  fillColor: Colors.white,
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
+                                                  ),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
+                                                  ),
+                                                  errorBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.5,
+                                                            color: Colors.red),
+                                                  ),
+                                                  labelText:
+                                                      'Preço unitário (R\$)',
+                                                ),
+                                              ),
+                                              const Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 10.0,
+                                                    top: 20,
+                                                    bottom: 10),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Parcela da Produção destinada \nao consumo próprio (Quilogramas)',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 15),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              TextFormField(
+                                                validator: (value) =>
+                                                    value != null &&
+                                                            value.isEmpty
+                                                        ? 'Preencha o Campo'
+                                                        : null,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                controller:
+                                                    parcelaProcessadosAnimalCosumoController,
+                                                decoration: InputDecoration(
+                                                  filled: true,
+                                                  fillColor: Colors.white,
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
+                                                  ),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
+                                                  ),
+                                                  errorBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            width: 0.5,
+                                                            color: Colors.red),
+                                                  ),
+                                                  labelText:
+                                                      'Parcela da produção destinada ao consumo familiar (Kg)',
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 20,
+                                              ),
+                                              const Divider(
+                                                thickness: 2,
+                                              ),
                                             ],
                                           ),
                                         ),
