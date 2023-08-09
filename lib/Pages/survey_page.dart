@@ -42,12 +42,14 @@ class _FormPageState extends State<FormPage> {
   final tabelaUnidadeFamiliar = UnidadeFamiliarRepository.tabela;
   final tabelaAtividades = AtividadeRepository.tabela;
   bool _showValidationError = false;
+
   List<TextEditingController> areaPuraControllers = [];
   List<TextEditingController> areaConsorciadaControllers = [];
   List<TextEditingController> quantidadeColhidaControllers = [];
   List<TextEditingController> quantidadeVendidaControllers = [];
   List<TextEditingController> precoUnitarioControllers = [];
   List<TextEditingController> parcelaCosumoControllers = [];
+  List<TextEditingController> quantidadePerdidadeVegetaisControllers = [];
 
   // List<TextEditingController> parcelaPAAControllers = [];
   // List<TextEditingController> parcelaMercadosLocaisControllers = [];
@@ -60,6 +62,7 @@ class _FormPageState extends State<FormPage> {
   List<TextEditingController> quantidadeAnimalVendidoControllers = [];
   List<TextEditingController> precoAnimalUnitarioControllers = [];
   List<TextEditingController> parcelaAnimalCosumoControllers = [];
+  List<TextEditingController> quantidadePerdidadeAnimaisControllers = [];
 
   List<TextEditingController> areaProcessadosVegetalControllers = [];
   List<TextEditingController> volumeProcessadosVegetalControllers = [];
@@ -69,6 +72,7 @@ class _FormPageState extends State<FormPage> {
       [];
   List<TextEditingController> precoProcessadosVegetalUnitarioControllers = [];
   List<TextEditingController> parcelaProcessadosVegetalCosumoControllers = [];
+  List<TextEditingController> quantidadePerdidadeProcessadosVegetaisControllers = [];
 
   List<TextEditingController> areaProcessadosAnimalControllers = [];
   List<TextEditingController> volumeProcessadosAnimalControllers = [];
@@ -78,6 +82,7 @@ class _FormPageState extends State<FormPage> {
       [];
   List<TextEditingController> precoProcessadosAnimalUnitarioControllers = [];
   List<TextEditingController> parcelaProcessadosAnimalCosumoControllers = [];
+  List<TextEditingController> quantidadePerdidadeProcessadosAnimaissControllers = [];
 
   final _formKey = GlobalKey<FormState>();
 
@@ -1085,6 +1090,10 @@ class _FormPageState extends State<FormPage> {
                                       parcelaCosumoControllers.length > index
                                           ? parcelaCosumoControllers[index]
                                           : null;
+                                  final quantidadePerdidaVegetalController =
+                                  quantidadePerdidadeVegetaisControllers.length > index
+                                      ? quantidadePerdidadeVegetaisControllers[index]
+                                      : null;
                                   // Novo estado para armazenar se o vegetal é orgânico ou não
                                   return Column(
                                     children: [
@@ -1154,6 +1163,8 @@ class _FormPageState extends State<FormPage> {
                                                     TextEditingController());
                                                 parcelaCosumoControllers.add(
                                                     TextEditingController());
+                                                quantidadePerdidadeVegetaisControllers.add(
+                                                    TextEditingController());
                                               } else {
                                                 int index = _selectedVegetais
                                                     .indexOf(value!);
@@ -1171,6 +1182,8 @@ class _FormPageState extends State<FormPage> {
                                                   precoUnitarioControllers
                                                       .removeAt(index);
                                                   parcelaCosumoControllers
+                                                      .removeAt(index);
+                                                  quantidadePerdidadeVegetaisControllers
                                                       .removeAt(index);
                                                 }
                                               }
@@ -1384,6 +1397,74 @@ class _FormPageState extends State<FormPage> {
                                                   ),
                                                   labelText:
                                                       'Qual volume foi autoconsumido,doado ou trocado?',
+                                                  suffixText: 'quilos',
+                                                ),
+                                              ),
+                                              const Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 10.0,
+                                                    top: 20,
+                                                    bottom: 10),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Quanto da produção foi perdida?',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                          FontWeight.w500,
+                                                          fontSize: 15),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              TextFormField(
+                                                validator: (value) =>
+                                                value != null &&
+                                                    value.isEmpty
+                                                    ? 'Preencha o Campo'
+                                                    : null,
+                                                keyboardType:
+                                                TextInputType.number,
+                                                controller:
+                                                quantidadePerdidaVegetalController,
+                                                decoration: InputDecoration(
+                                                  filled: true,
+                                                  fillColor: Colors.white,
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                    BorderRadius.circular(
+                                                        30),
+                                                    borderSide:
+                                                    const BorderSide(
+                                                        width: 0.8,
+                                                        color:
+                                                        Colors.white),
+                                                  ),
+                                                  enabledBorder:
+                                                  OutlineInputBorder(
+                                                    borderRadius:
+                                                    BorderRadius.circular(
+                                                        30),
+                                                    borderSide:
+                                                    const BorderSide(
+                                                        width: 0.8,
+                                                        color:
+                                                        Colors.white),
+                                                  ),
+                                                  errorBorder:
+                                                  OutlineInputBorder(
+                                                    borderRadius:
+                                                    BorderRadius.circular(
+                                                        30),
+                                                    borderSide:
+                                                    const BorderSide(
+                                                        width: 0.5,
+                                                        color: Colors.red),
+                                                  ),
+                                                  labelText:
+                                                  'Quanto foi perdido?',
                                                   suffixText: 'quilos',
                                                 ),
                                               ),
@@ -1894,6 +1975,13 @@ class _FormPageState extends State<FormPage> {
                                           ? parcelaProcessadosVegetalCosumoControllers[
                                               index]
                                           : null;
+                                  final quantidadePerdidaProcessadosVegetaisController =
+                                  quantidadePerdidadeVegetaisControllers
+                                      .length >
+                                      index
+                                      ? quantidadePerdidadeVegetaisControllers[
+                                  index]
+                                      : null;
                                   return Column(
                                     children: [
                                       Padding(
@@ -1971,6 +2059,8 @@ class _FormPageState extends State<FormPage> {
                                                 parcelaProcessadosVegetalCosumoControllers
                                                     .add(
                                                         TextEditingController());
+                                                quantidadePerdidadeProcessadosVegetaisControllers.add(
+                                                    TextEditingController());
                                               } else {
                                                 int index =
                                                     _selectedProcessadosVegetais
@@ -1989,6 +2079,8 @@ class _FormPageState extends State<FormPage> {
                                                   precoProcessadosVegetalUnitarioControllers
                                                       .removeAt(index);
                                                   parcelaProcessadosVegetalCosumoControllers
+                                                      .removeAt(index);
+                                                  quantidadePerdidadeProcessadosVegetaisControllers
                                                       .removeAt(index);
                                                 }
                                               }
@@ -2203,6 +2295,74 @@ class _FormPageState extends State<FormPage> {
                                                   ),
                                                   labelText:
                                                       'Qual volume foi autoconsumido, doado ou trocado?',
+                                                  suffixText: 'quilos',
+                                                ),
+                                              ),
+                                              const Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 10.0,
+                                                    top: 20,
+                                                    bottom: 10),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Quanto da produção foi perdida?',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                          FontWeight.w500,
+                                                          fontSize: 15),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              TextFormField(
+                                                validator: (value) =>
+                                                value != null &&
+                                                    value.isEmpty
+                                                    ? 'Preencha o Campo'
+                                                    : null,
+                                                keyboardType:
+                                                TextInputType.number,
+                                                controller:
+                                                quantidadePerdidaProcessadosVegetaisController,
+                                                decoration: InputDecoration(
+                                                  filled: true,
+                                                  fillColor: Colors.white,
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                    BorderRadius.circular(
+                                                        30),
+                                                    borderSide:
+                                                    const BorderSide(
+                                                        width: 0.8,
+                                                        color:
+                                                        Colors.white),
+                                                  ),
+                                                  enabledBorder:
+                                                  OutlineInputBorder(
+                                                    borderRadius:
+                                                    BorderRadius.circular(
+                                                        30),
+                                                    borderSide:
+                                                    const BorderSide(
+                                                        width: 0.8,
+                                                        color:
+                                                        Colors.white),
+                                                  ),
+                                                  errorBorder:
+                                                  OutlineInputBorder(
+                                                    borderRadius:
+                                                    BorderRadius.circular(
+                                                        30),
+                                                    borderSide:
+                                                    const BorderSide(
+                                                        width: 0.5,
+                                                        color: Colors.red),
+                                                  ),
+                                                  labelText:
+                                                  'Quanto foi perdido?',
                                                   suffixText: 'quilos',
                                                 ),
                                               ),
@@ -2584,6 +2744,12 @@ class _FormPageState extends State<FormPage> {
                                           ? parcelaAnimalCosumoControllers[
                                               index]
                                           : null;
+                                  final quantidadePerdidaAnimaisController =
+                                  quantidadePerdidadeAnimaisControllers.length >
+                                      index
+                                      ? quantidadePerdidadeAnimaisControllers[
+                                  index]
+                                      : null;
                                   return Column(
                                     children: [
                                       Padding(
@@ -2652,6 +2818,9 @@ class _FormPageState extends State<FormPage> {
                                                 parcelaAnimalCosumoControllers
                                                     .add(
                                                         TextEditingController());
+                                                quantidadePerdidadeAnimaisControllers
+                                                    .add(
+                                                    TextEditingController());
                                               } else {
                                                 int index = _selectedAnimais
                                                     .indexOf(value!);
@@ -2667,6 +2836,8 @@ class _FormPageState extends State<FormPage> {
                                                   precoAnimalUnitarioControllers
                                                       .removeAt(index);
                                                   parcelaAnimalCosumoControllers
+                                                      .removeAt(index);
+                                                  quantidadePerdidadeAnimaisControllers
                                                       .removeAt(index);
                                                 }
                                               }
@@ -2882,6 +3053,74 @@ class _FormPageState extends State<FormPage> {
                                                   ),
                                                   labelText:
                                                       'Qual volume foi autoconsumido, doado ou trocado?',
+                                                  suffixText: 'quilos',
+                                                ),
+                                              ),
+                                              const Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 10.0,
+                                                    top: 20,
+                                                    bottom: 10),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Quanto da produção foi perdida?',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                          FontWeight.w500,
+                                                          fontSize: 15),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              TextFormField(
+                                                validator: (value) =>
+                                                value != null &&
+                                                    value.isEmpty
+                                                    ? 'Preencha o Campo'
+                                                    : null,
+                                                keyboardType:
+                                                TextInputType.number,
+                                                controller:
+                                                quantidadePerdidaAnimaisController,
+                                                decoration: InputDecoration(
+                                                  filled: true,
+                                                  fillColor: Colors.white,
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                    BorderRadius.circular(
+                                                        30),
+                                                    borderSide:
+                                                    const BorderSide(
+                                                        width: 0.8,
+                                                        color:
+                                                        Colors.white),
+                                                  ),
+                                                  enabledBorder:
+                                                  OutlineInputBorder(
+                                                    borderRadius:
+                                                    BorderRadius.circular(
+                                                        30),
+                                                    borderSide:
+                                                    const BorderSide(
+                                                        width: 0.8,
+                                                        color:
+                                                        Colors.white),
+                                                  ),
+                                                  errorBorder:
+                                                  OutlineInputBorder(
+                                                    borderRadius:
+                                                    BorderRadius.circular(
+                                                        30),
+                                                    borderSide:
+                                                    const BorderSide(
+                                                        width: 0.5,
+                                                        color: Colors.red),
+                                                  ),
+                                                  labelText:
+                                                  'Quanto foi perdido?',
                                                   suffixText: 'quilos',
                                                 ),
                                               ),
@@ -3282,6 +3521,13 @@ class _FormPageState extends State<FormPage> {
                                           ? parcelaProcessadosAnimalCosumoControllers[
                                               index]
                                           : null;
+                                  final quantidadePerdidadeProcessadosAnimaissController =
+                                  quantidadePerdidadeProcessadosAnimaissControllers
+                                      .length >
+                                      index
+                                      ? quantidadePerdidadeProcessadosAnimaissControllers[
+                                  index]
+                                      : null;
                                   return Column(
                                     children: [
                                       Padding(
@@ -3359,6 +3605,9 @@ class _FormPageState extends State<FormPage> {
                                                 parcelaProcessadosAnimalCosumoControllers
                                                     .add(
                                                         TextEditingController());
+                                                quantidadePerdidadeProcessadosAnimaissControllers
+                                                    .add(
+                                                    TextEditingController());
                                               } else {
                                                 int index =
                                                     _selectedProcessadosAnimais
@@ -3377,6 +3626,8 @@ class _FormPageState extends State<FormPage> {
                                                   precoProcessadosAnimalUnitarioControllers
                                                       .removeAt(index);
                                                   parcelaProcessadosAnimalCosumoControllers
+                                                      .removeAt(index);
+                                                  quantidadePerdidadeProcessadosAnimaissControllers
                                                       .removeAt(index);
                                                 }
                                               }
@@ -3591,6 +3842,74 @@ class _FormPageState extends State<FormPage> {
                                                   ),
                                                   labelText:
                                                       'Qual volume foi autoconsumido, doado ou trocado?',
+                                                  suffixText: 'quilos',
+                                                ),
+                                              ),
+                                              const Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 10.0,
+                                                    top: 20,
+                                                    bottom: 10),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Quanto da produção foi perdida?',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                          FontWeight.w500,
+                                                          fontSize: 15),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              TextFormField(
+                                                validator: (value) =>
+                                                value != null &&
+                                                    value.isEmpty
+                                                    ? 'Preencha o Campo'
+                                                    : null,
+                                                keyboardType:
+                                                TextInputType.number,
+                                                controller:
+                                                quantidadePerdidadeProcessadosAnimaissController,
+                                                decoration: InputDecoration(
+                                                  filled: true,
+                                                  fillColor: Colors.white,
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                    BorderRadius.circular(
+                                                        30),
+                                                    borderSide:
+                                                    const BorderSide(
+                                                        width: 0.8,
+                                                        color:
+                                                        Colors.white),
+                                                  ),
+                                                  enabledBorder:
+                                                  OutlineInputBorder(
+                                                    borderRadius:
+                                                    BorderRadius.circular(
+                                                        30),
+                                                    borderSide:
+                                                    const BorderSide(
+                                                        width: 0.8,
+                                                        color:
+                                                        Colors.white),
+                                                  ),
+                                                  errorBorder:
+                                                  OutlineInputBorder(
+                                                    borderRadius:
+                                                    BorderRadius.circular(
+                                                        30),
+                                                    borderSide:
+                                                    const BorderSide(
+                                                        width: 0.5,
+                                                        color: Colors.red),
+                                                  ),
+                                                  labelText:
+                                                  'Quanto foi perdido?',
                                                   suffixText: 'quilos',
                                                 ),
                                               ),
