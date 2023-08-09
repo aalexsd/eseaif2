@@ -88,6 +88,7 @@ class _FormPageState extends State<FormPage> {
   }
 
   List<bool> expanded = [false, false];
+  List<bool> _selectedVegetaisOrganicos = List.generate(10, (index) => true);
   String? _selectedGender;
   String? _selectedGroup;
   String? _selectedComunity;
@@ -96,17 +97,20 @@ class _FormPageState extends State<FormPage> {
   String? _selectedMunicipio;
   String? _selectedUnidade;
   String? _selectedProducao;
+  bool usaAgrotoxico = false;
   bool _visitedInstitutions = false;
   bool _possuiSelos = false;
   bool _possuiCertificacao = false;
   bool _possuiDAP = false;
   bool _possuiCAR = false;
   bool _produziuVegetais = false;
+  bool _produziuOrganicos = false;
   bool _produziuProcessadosVegetais = false;
   bool _produziuProcessadosAnimais = false;
   bool _criouAnimais = false;
   final List<String> _selectedInstitutions = [];
   final List<String> _selectedSelos = [];
+  final List<String> _selectedCanais = [];
   final List<String> _selectedCertificacao = [];
   final List<String> _selectedDAP = [];
   final List<String> _selectedBeneficios = [];
@@ -1074,6 +1078,7 @@ class _FormPageState extends State<FormPage> {
                                       parcelaCosumoControllers.length > index
                                           ? parcelaCosumoControllers[index]
                                           : null;
+                                  // Novo estado para armazenar se o vegetal é orgânico ou não
                                   return Column(
                                     children: [
                                       Padding(
@@ -1181,7 +1186,7 @@ class _FormPageState extends State<FormPage> {
                                                       MainAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      'Total de área destinada à produção (Hectares)',
+                                                      'Total de área destinada à produção - (Hectares)',
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.w500,
@@ -1234,7 +1239,7 @@ class _FormPageState extends State<FormPage> {
                                                             color: Colors.red),
                                                   ),
                                                   labelText:
-                                                      'Área destinada à produção (ha)',
+                                                      'Área destinada à produção - (ha)',
                                                 ),
                                               ),
                                               const Padding(
@@ -1247,7 +1252,8 @@ class _FormPageState extends State<FormPage> {
                                                       MainAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      'Quantidade Colhida (Quilogramas)',
+                                                      'Volume produzido '
+                                                          '\n(Utilize a unidade do item)',
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.w500,
@@ -1301,7 +1307,7 @@ class _FormPageState extends State<FormPage> {
                                                             color: Colors.red),
                                                   ),
                                                   labelText:
-                                                      'Quantidade colhida (Kg)',
+                                                      'Volume produzido',
                                                 ),
                                               ),
                                               const Padding(
@@ -1314,7 +1320,8 @@ class _FormPageState extends State<FormPage> {
                                                       MainAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      'Quantidade Vendida (Quilogramas)',
+                                                      'Volume comercializado no último ano '
+                                                          '\n(Utilize a unidade do item)',
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.w500,
@@ -1463,7 +1470,8 @@ class _FormPageState extends State<FormPage> {
                                                       MainAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      'Parcela da Produção destinada \nao consumo próprio (Quilogramas)',
+                                                      'Qual volume foi autoconsumido, '
+                                                      '\ndoado ou trocado?',
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.w500,
@@ -1517,15 +1525,114 @@ class _FormPageState extends State<FormPage> {
                                                             color: Colors.red),
                                                   ),
                                                   labelText:
-                                                      'Parcela da produção destinada ao consumo familiar (Kg)',
+                                                      'Qual volume foi autoconsumido,doado ou trocado?',
                                                 ),
                                               ),
-                                              const SizedBox(
-                                                height: 20,
+                                              const Padding(
+                                                padding: EdgeInsets.all(10.0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Esse item, \nfoi produzido de forma ORGÂNICA?',
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                              const Divider(
-                                                thickness: 2,
-                                              )
+                                              Row(
+                                                children: [
+                                                  Radio<bool>(
+                                                    value: true,
+                                                    groupValue:
+                                                        _selectedVegetaisOrganicos[
+                                                            index],
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        _selectedVegetaisOrganicos[
+                                                            index] = value!;
+                                                      });
+                                                    },
+                                                  ),
+                                                  const Text('Sim'),
+                                                  Radio<bool>(
+                                                    value: false,
+                                                    groupValue:
+                                                        _selectedVegetaisOrganicos[
+                                                            index],
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        _selectedVegetaisOrganicos[
+                                                            index] = value!;
+                                                      });
+                                                    },
+                                                  ),
+                                                  const Text('Não'),
+                                                ],
+                                              ),
+                                              Visibility(
+                                                visible:
+                                                    _selectedVegetaisOrganicos[
+                                                            index] ==
+                                                        false,
+                                                child: const Padding(
+                                                  padding: EdgeInsets.all(10.0),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      Text(
+                                                        'Utiliza agrotóxicos/químico?',
+                                                        style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Visibility(
+                                                visible:
+                                                    _selectedVegetaisOrganicos[
+                                                            index] ==
+                                                        false,
+                                                child: Row(
+                                                  children: [
+                                                    Radio<bool>(
+                                                      value: true,
+                                                      groupValue: usaAgrotoxico,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          usaAgrotoxico =
+                                                              value!;
+                                                        });
+                                                      },
+                                                    ),
+                                                    const Text('Sim'),
+                                                    Radio<bool>(
+                                                      value: false,
+                                                      groupValue: usaAgrotoxico,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          usaAgrotoxico =
+                                                              value!;
+                                                        });
+                                                      },
+                                                    ),
+                                                    const Text('Não'),
+                                                  ],
+                                                ),
+                                              ),
+                                              Divider(
+                                                thickness: 1,
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -1535,9 +1642,6 @@ class _FormPageState extends State<FormPage> {
                               ),
                             ],
                           ),
-                        const Divider(
-                          thickness: 1,
-                        ),
                         const Padding(
                           padding: EdgeInsets.all(20.0),
                           child: Row(
@@ -2094,7 +2198,8 @@ class _FormPageState extends State<FormPage> {
                                                       MainAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      'Parcela da Produção destinada \nao consumo próprio (Quilogramas)',
+                                                      'Qual volume foi autoconsumido, '
+                                                      '\ndoado ou trocado?',
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.w500,
@@ -2148,7 +2253,7 @@ class _FormPageState extends State<FormPage> {
                                                             color: Colors.red),
                                                   ),
                                                   labelText:
-                                                      'Parcela da produção destinada ao consumo familiar (Kg)',
+                                                      'Qual volume foi autoconsumido, doado ou trocado?',
                                                 ),
                                               ),
                                               const SizedBox(
@@ -2747,7 +2852,7 @@ class _FormPageState extends State<FormPage> {
                                                             color: Colors.red),
                                                   ),
                                                   labelText:
-                                                      'Parcela da produção destinada ao consumo familiar',
+                                                      'Qual volume foi autoconsumido, doado ou trocado?',
                                                 ),
                                               ),
                                               const SizedBox(
@@ -3323,7 +3428,8 @@ class _FormPageState extends State<FormPage> {
                                                       MainAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      'Parcela da Produção destinada \nao consumo próprio (Quilogramas)',
+                                                      'Qual volume foi autoconsumido, '
+                                                      '\ndoado ou trocado?',
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.w500,
@@ -3377,7 +3483,7 @@ class _FormPageState extends State<FormPage> {
                                                             color: Colors.red),
                                                   ),
                                                   labelText:
-                                                      'Parcela da produção destinada ao consumo familiar (Kg)',
+                                                      'Qual volume foi autoconsumido, doado ou trocado?',
                                                 ),
                                               ),
                                               const SizedBox(
@@ -3407,8 +3513,7 @@ class _FormPageState extends State<FormPage> {
                               children: [
                                 Text(
                                   'Assinale todos os canais de comercialização da \n'
-                                  'produção na unidade familiar, \n'
-                                  'segundo sua ordem de importância',
+                                  'produção na unidade familiar.',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,
@@ -3418,65 +3523,100 @@ class _FormPageState extends State<FormPage> {
                             ),
                           ),
                         ),
+                        // ExpansionTile(
+                        //   title: Text(
+                        //     'Canais de comercialização',
+                        //     style: TextStyle(
+                        //         fontWeight: FontWeight.w300, fontSize: 16),
+                        //   ),
+                        //   children: [
+                        //     SizedBox(
+                        //       width: MediaQuery.of(context).size.width,
+                        //       height: MediaQuery.of(context).size.height * .5,
+                        //       child: ListView.separated(
+                        //         separatorBuilder: (_, __) => const Divider(
+                        //           thickness: 1.0,
+                        //         ),
+                        //         itemCount: UnidadeFamiliarRepository
+                        //             .canaisComercializacao.length,
+                        //         itemBuilder: (BuildContext context, int moeda) {
+                        //           return ListTile(
+                        //             title: Text(
+                        //               UnidadeFamiliarRepository
+                        //                   .canaisComercializacao[moeda].nome,
+                        //               style: TextStyle(
+                        //                   fontSize: 14,
+                        //                   fontWeight: FontWeight.bold),
+                        //             ),
+                        //             trailing: Row(
+                        //               mainAxisSize: MainAxisSize.min,
+                        //               children: [
+                        //                 Text("Importância:"),
+                        //                 SizedBox(width: 8),
+                        //                 Container(
+                        //                   width: 50,
+                        //                   child: TextField(
+                        //                     keyboardType: TextInputType.number,
+                        //                     onChanged: (value) {
+                        //                       int importance =
+                        //                           int.tryParse(value) ?? 0;
+                        //                       setState(() {
+                        //                         importances[moeda] = importance;
+                        //                       });
+                        //                     },
+                        //                   ),
+                        //                 ),
+                        //               ],
+                        //             ),
+                        //             leading: Checkbox(
+                        //               value: importances[moeda] > 0,
+                        //               onChanged: (value) {
+                        //                 setState(() {
+                        //                   importances[moeda] = value as int;
+                        //                 });
+                        //               },
+                        //             ),
+                        //           );
+                        //         },
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
                         ExpansionTile(
-                          title: Text(
-                            'Canais de comercialização',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w300, fontSize: 16),
-                          ),
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .5,
-                              child: ListView.separated(
-                                separatorBuilder: (_, __) => const Divider(
-                                  thickness: 1.0,
-                                ),
-                                itemCount: UnidadeFamiliarRepository
-                                    .canaisComercializacao.length,
-                                itemBuilder: (BuildContext context, int moeda) {
-                                  return ListTile(
+                            title: Text(
+                              'Canais de comercialização',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w300, fontSize: 18),
+                            ),
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: UnidadeFamiliarRepository
+                                    .canaisComercializacao
+                                    .map<Widget>((canais) {
+                                  return CheckboxListTile(
                                     title: Text(
-                                      UnidadeFamiliarRepository
-                                          .canaisComercializacao[moeda].nome,
+                                      canais.nome,
                                       style: TextStyle(
-                                          fontSize: 14,
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    trailing: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text("Importância:"),
-                                        SizedBox(width: 8),
-                                        Container(
-                                          width: 50,
-                                          child: TextField(
-                                            keyboardType: TextInputType.number,
-                                            onChanged: (value) {
-                                              int importance =
-                                                  int.tryParse(value) ?? 0;
-                                              setState(() {
-                                                importances[moeda] = importance;
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    leading: Checkbox(
-                                      value: importances[moeda] > 0,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          importances[moeda] = value as int;
-                                        });
-                                      },
-                                    ),
+                                    value:
+                                        _selectedCanais.contains(canais.nome),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        if (value != null && value) {
+                                          _selectedCanais.add(canais.nome);
+                                        } else {
+                                          _selectedCanais.remove(canais.nome);
+                                        }
+                                      });
+                                    },
+                                    controlAffinity:
+                                        ListTileControlAffinity.leading,
                                   );
-                                },
+                                }).toList(),
                               ),
-                            ),
-                          ],
-                        )
+                            ]),
                       ],
                     ),
                   ),
