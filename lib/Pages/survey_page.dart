@@ -30,6 +30,7 @@ class _FormPageState extends State<FormPage> {
   final cpfController = TextEditingController();
   final nisController = TextEditingController();
   final telefoneController = TextEditingController();
+  final quantidadeFamilia = TextEditingController();
   final nameConjugeController = TextEditingController();
   final cpfConjugeController = TextEditingController();
   final nisConjugeController = TextEditingController();
@@ -474,10 +475,8 @@ class _FormPageState extends State<FormPage> {
                         Padding(
                           padding: const EdgeInsets.only(left: 20, right: 20),
                           child: TextFormField(
-                            controller: telefoneController,
-                            inputFormatters: [
-                              MascaraFormatacao.formatadorTelefone
-                            ],
+                            controller: quantidadeFamilia,
+                            inputFormatters: [],
                             keyboardType: TextInputType.number,
                             validator: (value) {
                               if (value!.isEmpty) {
@@ -1247,7 +1246,8 @@ class _FormPageState extends State<FormPage> {
                                                             color: Colors.red),
                                                   ),
                                                   labelText:
-                                                      'Área destinada à produção - (ha)',
+                                                      'Área destinada à produção',
+                                                  suffixText: 'hectares',
                                                 ),
                                               ),
                                               const Padding(
@@ -1315,6 +1315,7 @@ class _FormPageState extends State<FormPage> {
                                                             color: Colors.red),
                                                   ),
                                                   labelText: 'Volume produzido',
+                                                  suffixText: 'quilos',
                                                 ),
                                               ),
                                               const Padding(
@@ -1383,6 +1384,7 @@ class _FormPageState extends State<FormPage> {
                                                   ),
                                                   labelText:
                                                       'Qual volume foi autoconsumido,doado ou trocado?',
+                                                  suffixText: 'quilos',
                                                 ),
                                               ),
                                               const Padding(
@@ -1636,6 +1638,7 @@ class _FormPageState extends State<FormPage> {
                                                           ),
                                                           labelText:
                                                               'Volume comercializado',
+                                                              suffixText: 'quilos',
                                                         ),
                                                       ),
                                                       const Padding(
@@ -1715,6 +1718,7 @@ class _FormPageState extends State<FormPage> {
                                                           ),
                                                           labelText:
                                                               'Preço unitário (R\$)',
+                                                              suffixText: 'reais',
                                                         ),
                                                       ),
                                                     ],
@@ -2061,7 +2065,8 @@ class _FormPageState extends State<FormPage> {
                                                             color: Colors.red),
                                                   ),
                                                   labelText:
-                                                      'Área destinada à produção - (ha)',
+                                                      'Área destinada à produção',
+                                                  suffixText: 'hectares',
                                                 ),
                                               ),
                                               const Padding(
@@ -2129,6 +2134,7 @@ class _FormPageState extends State<FormPage> {
                                                             color: Colors.red),
                                                   ),
                                                   labelText: 'Volume produzido',
+                                                  suffixText: 'quilos',
                                                 ),
                                               ),
                                               const Padding(
@@ -2197,6 +2203,7 @@ class _FormPageState extends State<FormPage> {
                                                   ),
                                                   labelText:
                                                       'Qual volume foi autoconsumido, doado ou trocado?',
+                                                  suffixText: 'quilos',
                                                 ),
                                               ),
                                               const Padding(
@@ -2339,6 +2346,7 @@ class _FormPageState extends State<FormPage> {
                                                         ),
                                                         labelText:
                                                             'Volume comercializado',
+                                                            suffixText: 'quilos',
                                                       ),
                                                     ),
                                                     const Padding(
@@ -2411,6 +2419,7 @@ class _FormPageState extends State<FormPage> {
                                                         ),
                                                         labelText:
                                                             'Preço unitário (R\$)',
+                                                            suffixText: 'reais',
                                                       ),
                                                     ),
                                                   ],
@@ -2734,7 +2743,8 @@ class _FormPageState extends State<FormPage> {
                                                             color: Colors.red),
                                                   ),
                                                   labelText:
-                                                      'Área de animais criados - (ha)',
+                                                      'Área de animais criados',
+                                                  suffixText: 'hectares',
                                                 ),
                                               ),
                                               const Padding(
@@ -2748,7 +2758,7 @@ class _FormPageState extends State<FormPage> {
                                                   children: [
                                                     Text(
                                                       'Volume produzido\n'
-                                                      '(Utilize a unidade do item)',
+                                                      '(Quilogramas)',
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.w500,
@@ -2800,7 +2810,9 @@ class _FormPageState extends State<FormPage> {
                                                             width: 0.5,
                                                             color: Colors.red),
                                                   ),
-                                                  labelText: 'Volume produzido',
+                                                  labelText:
+                                                      'Volume produzido',
+                                                  suffixText: 'quilos',
                                                 ),
                                               ),
                                               const Padding(
@@ -2814,7 +2826,8 @@ class _FormPageState extends State<FormPage> {
                                                   children: [
                                                     Text(
                                                       'Qual volume foi autoconsumido,'
-                                                      '\ndoado ou trocado',
+                                                      '\ndoado ou trocado?'
+                                                      '\n(Quilogramas)',
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.w500,
@@ -2869,6 +2882,7 @@ class _FormPageState extends State<FormPage> {
                                                   ),
                                                   labelText:
                                                       'Qual volume foi autoconsumido, doado ou trocado?',
+                                                  suffixText: 'quilos',
                                                 ),
                                               ),
                                               const Padding(
@@ -2937,7 +2951,7 @@ class _FormPageState extends State<FormPage> {
                                                         children: [
                                                           Text(
                                                             'Volume Comercializado'
-                                                            '\n(Utilize a unidade do item)',
+                                                            '\n(Quilogramas)',
                                                             style: TextStyle(
                                                                 fontWeight:
                                                                     FontWeight
@@ -3011,6 +3025,7 @@ class _FormPageState extends State<FormPage> {
                                                         ),
                                                         labelText:
                                                             'Volume comercializado',
+                                                        suffixText: 'quilos',
                                                       ),
                                                     ),
                                                     const Padding(
@@ -3082,7 +3097,8 @@ class _FormPageState extends State<FormPage> {
                                                                       .red),
                                                         ),
                                                         labelText:
-                                                            'Preço unitário (R\$)',
+                                                            'Preço unitário',
+                                                            suffixText: 'reais',
                                                       ),
                                                     ),
                                                   ],
@@ -3437,7 +3453,8 @@ class _FormPageState extends State<FormPage> {
                                                             color: Colors.red),
                                                   ),
                                                   labelText:
-                                                      'Área destinada à produção - (ha)',
+                                                      'Área destinada à produção',
+                                                  suffixText: 'hectares',
                                                 ),
                                               ),
                                               const Padding(
@@ -3505,6 +3522,7 @@ class _FormPageState extends State<FormPage> {
                                                             color: Colors.red),
                                                   ),
                                                   labelText: 'Volume produzido',
+                                                  suffixText: 'quilos',
                                                 ),
                                               ),
                                               const Padding(
@@ -3573,6 +3591,7 @@ class _FormPageState extends State<FormPage> {
                                                   ),
                                                   labelText:
                                                       'Qual volume foi autoconsumido, doado ou trocado?',
+                                                  suffixText: 'quilos',
                                                 ),
                                               ),
                                               const Padding(
@@ -3724,6 +3743,7 @@ class _FormPageState extends State<FormPage> {
                                                           ),
                                                           labelText:
                                                               'Volume comercializado',
+                                                              suffixText: 'quilos',
                                                         ),
                                                       ),
                                                       const Padding(
@@ -3803,6 +3823,7 @@ class _FormPageState extends State<FormPage> {
                                                           ),
                                                           labelText:
                                                               'Preço unitário (R\$)',
+                                                              suffixText: 'reais',
                                                         ),
                                                       ),
                                                     ],
