@@ -50,6 +50,14 @@ class _FormPageState extends State<FormPage> {
   List<TextEditingController> precoUnitarioControllers = [];
   List<TextEditingController> parcelaCosumoControllers = [];
   List<TextEditingController> quantidadePerdidadeVegetaisControllers = [];
+  List<List<bool>> _selectedMonthsVegetal = List.generate(
+    12, // Substitua pelo número adequado de itens na sua lista
+    (index) => List<bool>.filled(12, false),
+  );
+  List<bool> _allMonthsSelectedVegetal = List.generate(12, (index) => false);
+  List<bool> _selectedVegetaisOrganicos = List.generate(10, (index) => true);
+  List<bool> _selectedVegetaisComercializados =
+      List.generate(10, (index) => false);
 
   // List<TextEditingController> parcelaPAAControllers = [];
   // List<TextEditingController> parcelaMercadosLocaisControllers = [];
@@ -63,6 +71,13 @@ class _FormPageState extends State<FormPage> {
   List<TextEditingController> precoAnimalUnitarioControllers = [];
   List<TextEditingController> parcelaAnimalCosumoControllers = [];
   List<TextEditingController> quantidadePerdidadeAnimaisControllers = [];
+  List<bool> _selectedAnimaisComercializados =
+      List.generate(10, (index) => false);
+  List<List<bool>> _selectedMonthsAnimal = List.generate(
+    12, // Substitua pelo número adequado de itens na sua lista
+    (index) => List<bool>.filled(12, false),
+  );
+  List<bool> _allMonthsSelectedAnimal = List.generate(12, (index) => false);
 
   List<TextEditingController> areaProcessadosVegetalControllers = [];
   List<TextEditingController> volumeProcessadosVegetalControllers = [];
@@ -72,7 +87,17 @@ class _FormPageState extends State<FormPage> {
       [];
   List<TextEditingController> precoProcessadosVegetalUnitarioControllers = [];
   List<TextEditingController> parcelaProcessadosVegetalCosumoControllers = [];
-  List<TextEditingController> quantidadePerdidadeProcessadosVegetaisControllers = [];
+  List<TextEditingController>
+      quantidadePerdidadeProcessadosVegetaisControllers = [];
+
+  List<bool> _selectedProcessadosVegetaisComercializados =
+      List.generate(10, (index) => false);
+  List<List<bool>> _selectedMonthsProcessadoVegetal = List.generate(
+    12, // Substitua pelo número adequado de itens na sua lista
+    (index) => List<bool>.filled(12, false),
+  );
+  List<bool> _allMonthsSelectedProcessadoVegetal =
+      List.generate(12, (index) => false);
 
   List<TextEditingController> areaProcessadosAnimalControllers = [];
   List<TextEditingController> volumeProcessadosAnimalControllers = [];
@@ -82,7 +107,16 @@ class _FormPageState extends State<FormPage> {
       [];
   List<TextEditingController> precoProcessadosAnimalUnitarioControllers = [];
   List<TextEditingController> parcelaProcessadosAnimalCosumoControllers = [];
-  List<TextEditingController> quantidadePerdidadeProcessadosAnimaissControllers = [];
+  List<TextEditingController>
+      quantidadePerdidadeProcessadosAnimaissControllers = [];
+  List<bool> _selectedProcessadosAnimalComercializados =
+      List.generate(10, (index) => false);
+  List<List<bool>> _selectedMonthsProcessadoAnimal = List.generate(
+    12, // Substitua pelo número adequado de itens na sua lista
+    (index) => List<bool>.filled(12, false),
+  );
+  List<bool> _allMonthsSelectedProcessadoAnimal =
+      List.generate(12, (index) => false);
 
   final _formKey = GlobalKey<FormState>();
 
@@ -94,21 +128,13 @@ class _FormPageState extends State<FormPage> {
   }
 
   List<bool> expanded = [false, false];
-  List<bool> _selectedVegetaisOrganicos = List.generate(10, (index) => true);
-  List<bool> _selectedVegetaisComercializados =
-      List.generate(10, (index) => false);
-  List<bool> _selectedAnimaisComercializados =
-      List.generate(10, (index) => false);
-  List<bool> _selectedProcessadosVegetaisComercializados =
-      List.generate(10, (index) => false);
-  List<bool> _selectedProcessadosAnimalComercializados =
-      List.generate(10, (index) => false);
-  String? _selectedGender;
-  String? _selectedGroup;
-  String? _selectedComunity;
-  String? _selectedMoradias;
-  String? _selectedMaritalStatus;
-  String? _selectedMunicipio;
+
+  // String? _selectedGender;
+  // String? _selectedGroup;
+  // String? _selectedComunity;
+  // String? _selectedMoradias;
+  // String? _selectedMaritalStatus;
+  // String? _selectedMunicipio;
   String? _selectedUnidade;
   String? _selectedProducao;
   bool usaAgrotoxico = false;
@@ -244,18 +270,18 @@ class _FormPageState extends State<FormPage> {
       'Entrevistador': user.email,
       'DataEntrevista': formattedDate,
       'HoraEntrevista': formattedTime,
-      'GrupoAmostral': _selectedGroup,
-      'Municipio': _selectedMunicipio,
+      // 'GrupoAmostral': _selectedGroup,
+      // 'Municipio': _selectedMunicipio,
       'Comunidade': comunidadeController.text,
-      'IdentificacaoSociocultural': _selectedComunity,
-      'CaracteristicaMoradias': _selectedMoradias,
+      // 'IdentificacaoSociocultural': _selectedComunity,
+      // 'CaracteristicaMoradias': _selectedMoradias,
       'AtividadesProdutivas': _selectedActivities,
       'NomeEntrevistado': nameEntrevistadoController.text,
       'NomeChefeFamilia': nameChefeFamiliaController.text,
       'CPFChefe': cpfController.text,
       'NIS/CADUnicoChefe': nisController.text,
       'TelefoneChefe': telefoneController.text,
-      'GeneroChefe': _selectedGender,
+      // 'GeneroChefe': _selectedGender,
       'possuiDAP': _selectedDAP,
       'unidadesFamiliares': _selectedInstitutions,
       'recebeuBeneficios': _selectedBeneficios,
@@ -270,6 +296,37 @@ class _FormPageState extends State<FormPage> {
       //print('Dados salvos com sucesso!');
     } catch (e) {
       //print('Erro ao salvar os dados: $e');
+    }
+  }
+
+  String getMonthName(int month) {
+    switch (month) {
+      case 1:
+        return 'jan';
+      case 2:
+        return 'fev';
+      case 3:
+        return 'mar';
+      case 4:
+        return 'abr';
+      case 5:
+        return 'mai';
+      case 6:
+        return 'jun';
+      case 7:
+        return 'jul';
+      case 8:
+        return 'ago';
+      case 9:
+        return 'set';
+      case 10:
+        return 'out';
+      case 11:
+        return 'nov';
+      case 12:
+        return 'dez';
+      default:
+        return '';
     }
   }
 
@@ -1091,9 +1148,12 @@ class _FormPageState extends State<FormPage> {
                                           ? parcelaCosumoControllers[index]
                                           : null;
                                   final quantidadePerdidaVegetalController =
-                                  quantidadePerdidadeVegetaisControllers.length > index
-                                      ? quantidadePerdidadeVegetaisControllers[index]
-                                      : null;
+                                      quantidadePerdidadeVegetaisControllers
+                                                  .length >
+                                              index
+                                          ? quantidadePerdidadeVegetaisControllers[
+                                              index]
+                                          : null;
                                   // Novo estado para armazenar se o vegetal é orgânico ou não
                                   return Column(
                                     children: [
@@ -1163,8 +1223,9 @@ class _FormPageState extends State<FormPage> {
                                                     TextEditingController());
                                                 parcelaCosumoControllers.add(
                                                     TextEditingController());
-                                                quantidadePerdidadeVegetaisControllers.add(
-                                                    TextEditingController());
+                                                quantidadePerdidadeVegetaisControllers
+                                                    .add(
+                                                        TextEditingController());
                                               } else {
                                                 int index = _selectedVegetais
                                                     .indexOf(value!);
@@ -1407,13 +1468,13 @@ class _FormPageState extends State<FormPage> {
                                                     bottom: 10),
                                                 child: Row(
                                                   mainAxisAlignment:
-                                                  MainAxisAlignment.start,
+                                                      MainAxisAlignment.start,
                                                   children: [
                                                     Text(
                                                       'Quanto da produção foi perdida?',
                                                       style: TextStyle(
                                                           fontWeight:
-                                                          FontWeight.w500,
+                                                              FontWeight.w500,
                                                           fontSize: 15),
                                                     ),
                                                   ],
@@ -1421,50 +1482,50 @@ class _FormPageState extends State<FormPage> {
                                               ),
                                               TextFormField(
                                                 validator: (value) =>
-                                                value != null &&
-                                                    value.isEmpty
-                                                    ? 'Preencha o Campo'
-                                                    : null,
+                                                    value != null &&
+                                                            value.isEmpty
+                                                        ? 'Preencha o Campo'
+                                                        : null,
                                                 keyboardType:
-                                                TextInputType.number,
+                                                    TextInputType.number,
                                                 controller:
-                                                quantidadePerdidaVegetalController,
+                                                    quantidadePerdidaVegetalController,
                                                 decoration: InputDecoration(
                                                   filled: true,
                                                   fillColor: Colors.white,
                                                   border: OutlineInputBorder(
                                                     borderRadius:
-                                                    BorderRadius.circular(
-                                                        30),
+                                                        BorderRadius.circular(
+                                                            30),
                                                     borderSide:
-                                                    const BorderSide(
-                                                        width: 0.8,
-                                                        color:
-                                                        Colors.white),
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
                                                   ),
                                                   enabledBorder:
-                                                  OutlineInputBorder(
+                                                      OutlineInputBorder(
                                                     borderRadius:
-                                                    BorderRadius.circular(
-                                                        30),
+                                                        BorderRadius.circular(
+                                                            30),
                                                     borderSide:
-                                                    const BorderSide(
-                                                        width: 0.8,
-                                                        color:
-                                                        Colors.white),
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
                                                   ),
                                                   errorBorder:
-                                                  OutlineInputBorder(
+                                                      OutlineInputBorder(
                                                     borderRadius:
-                                                    BorderRadius.circular(
-                                                        30),
+                                                        BorderRadius.circular(
+                                                            30),
                                                     borderSide:
-                                                    const BorderSide(
-                                                        width: 0.5,
-                                                        color: Colors.red),
+                                                        const BorderSide(
+                                                            width: 0.5,
+                                                            color: Colors.red),
                                                   ),
                                                   labelText:
-                                                  'Quanto foi perdido?',
+                                                      'Quanto foi perdido?',
                                                   suffixText: 'quilos',
                                                 ),
                                               ),
@@ -1719,7 +1780,7 @@ class _FormPageState extends State<FormPage> {
                                                           ),
                                                           labelText:
                                                               'Volume comercializado',
-                                                              suffixText: 'quilos',
+                                                          suffixText: 'quilos',
                                                         ),
                                                       ),
                                                       const Padding(
@@ -1799,14 +1860,113 @@ class _FormPageState extends State<FormPage> {
                                                           ),
                                                           labelText:
                                                               'Preço unitário (R\$)',
-                                                              suffixText: 'reais',
+                                                          suffixText: 'reais',
                                                         ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 10.0,
+                                                                top: 20,
+                                                                bottom: 10),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              'Em quais meses do ano o produto \nestá disponível para comercialização?',
+                                                              style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                fontSize: 15,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      ExpansionTile(
+                                                        title: Text(
+                                                          'Meses de Comercialização',
+                                                          style: TextStyle(
+                                                              fontSize: 18,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w300),
+                                                        ),
+                                                        children: [
+                                                          Column(
+                                                            children: [
+                                                              Row(
+                                                                children: [
+                                                                  Checkbox(
+                                                                    value: _allMonthsSelectedVegetal[
+                                                                        index],
+                                                                    onChanged:
+                                                                        (value) {
+                                                                      setState(
+                                                                          () {
+                                                                        _allMonthsSelectedVegetal[index] =
+                                                                            value!;
+                                                                        if (value) {
+                                                                          for (int i = 0;
+                                                                              i < 12;
+                                                                              i++) {
+                                                                            _selectedMonthsVegetal[index][i] =
+                                                                                true;
+                                                                          }
+                                                                        } else {
+                                                                          for (int i = 0;
+                                                                              i < 12;
+                                                                              i++) {
+                                                                            _selectedMonthsVegetal[index][i] =
+                                                                                false;
+                                                                          }
+                                                                        }
+                                                                      });
+                                                                    },
+                                                                  ),
+                                                                  Text(
+                                                                      'Todos os Meses'),
+                                                                ],
+                                                              ),
+                                                              for (int i = 1;
+                                                                  i <= 12;
+                                                                  i++)
+                                                                Row(
+                                                                  children: [
+                                                                    Checkbox(
+                                                                      value: _selectedMonthsVegetal[
+                                                                              index]
+                                                                          [
+                                                                          i - 1],
+                                                                      onChanged:
+                                                                          (value) {
+                                                                        setState(
+                                                                            () {
+                                                                          _selectedMonthsVegetal[index][i - 1] =
+                                                                              value!;
+                                                                          if (value &&
+                                                                              _allMonthsSelectedVegetal[index]) {
+                                                                            _allMonthsSelectedVegetal[index] =
+                                                                                false;
+                                                                          }
+                                                                        });
+                                                                      },
+                                                                    ),
+                                                                    Text(
+                                                                        getMonthName(
+                                                                            i)),
+                                                                  ],
+                                                                ),
+                                                            ],
+                                                          ),
+                                                        ],
                                                       ),
                                                     ],
                                                   )),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
                                             ],
                                           ),
                                         ),
@@ -1816,9 +1976,6 @@ class _FormPageState extends State<FormPage> {
                               ),
                             ],
                           ),
-                        Divider(
-                          thickness: 1,
-                        ),
                         const Padding(
                           padding: EdgeInsets.all(20.0),
                           child: Row(
@@ -1976,12 +2133,12 @@ class _FormPageState extends State<FormPage> {
                                               index]
                                           : null;
                                   final quantidadePerdidaProcessadosVegetaisController =
-                                  quantidadePerdidadeVegetaisControllers
-                                      .length >
-                                      index
-                                      ? quantidadePerdidadeVegetaisControllers[
-                                  index]
-                                      : null;
+                                      quantidadePerdidadeVegetaisControllers
+                                                  .length >
+                                              index
+                                          ? quantidadePerdidadeVegetaisControllers[
+                                              index]
+                                          : null;
                                   return Column(
                                     children: [
                                       Padding(
@@ -2059,8 +2216,9 @@ class _FormPageState extends State<FormPage> {
                                                 parcelaProcessadosVegetalCosumoControllers
                                                     .add(
                                                         TextEditingController());
-                                                quantidadePerdidadeProcessadosVegetaisControllers.add(
-                                                    TextEditingController());
+                                                quantidadePerdidadeProcessadosVegetaisControllers
+                                                    .add(
+                                                        TextEditingController());
                                               } else {
                                                 int index =
                                                     _selectedProcessadosVegetais
@@ -2305,13 +2463,13 @@ class _FormPageState extends State<FormPage> {
                                                     bottom: 10),
                                                 child: Row(
                                                   mainAxisAlignment:
-                                                  MainAxisAlignment.start,
+                                                      MainAxisAlignment.start,
                                                   children: [
                                                     Text(
                                                       'Quanto da produção foi perdida?',
                                                       style: TextStyle(
                                                           fontWeight:
-                                                          FontWeight.w500,
+                                                              FontWeight.w500,
                                                           fontSize: 15),
                                                     ),
                                                   ],
@@ -2319,50 +2477,50 @@ class _FormPageState extends State<FormPage> {
                                               ),
                                               TextFormField(
                                                 validator: (value) =>
-                                                value != null &&
-                                                    value.isEmpty
-                                                    ? 'Preencha o Campo'
-                                                    : null,
+                                                    value != null &&
+                                                            value.isEmpty
+                                                        ? 'Preencha o Campo'
+                                                        : null,
                                                 keyboardType:
-                                                TextInputType.number,
+                                                    TextInputType.number,
                                                 controller:
-                                                quantidadePerdidaProcessadosVegetaisController,
+                                                    quantidadePerdidaProcessadosVegetaisController,
                                                 decoration: InputDecoration(
                                                   filled: true,
                                                   fillColor: Colors.white,
                                                   border: OutlineInputBorder(
                                                     borderRadius:
-                                                    BorderRadius.circular(
-                                                        30),
+                                                        BorderRadius.circular(
+                                                            30),
                                                     borderSide:
-                                                    const BorderSide(
-                                                        width: 0.8,
-                                                        color:
-                                                        Colors.white),
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
                                                   ),
                                                   enabledBorder:
-                                                  OutlineInputBorder(
+                                                      OutlineInputBorder(
                                                     borderRadius:
-                                                    BorderRadius.circular(
-                                                        30),
+                                                        BorderRadius.circular(
+                                                            30),
                                                     borderSide:
-                                                    const BorderSide(
-                                                        width: 0.8,
-                                                        color:
-                                                        Colors.white),
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
                                                   ),
                                                   errorBorder:
-                                                  OutlineInputBorder(
+                                                      OutlineInputBorder(
                                                     borderRadius:
-                                                    BorderRadius.circular(
-                                                        30),
+                                                        BorderRadius.circular(
+                                                            30),
                                                     borderSide:
-                                                    const BorderSide(
-                                                        width: 0.5,
-                                                        color: Colors.red),
+                                                        const BorderSide(
+                                                            width: 0.5,
+                                                            color: Colors.red),
                                                   ),
                                                   labelText:
-                                                  'Quanto foi perdido?',
+                                                      'Quanto foi perdido?',
                                                   suffixText: 'quilos',
                                                 ),
                                               ),
@@ -2506,7 +2664,7 @@ class _FormPageState extends State<FormPage> {
                                                         ),
                                                         labelText:
                                                             'Volume comercializado',
-                                                            suffixText: 'quilos',
+                                                        suffixText: 'quilos',
                                                       ),
                                                     ),
                                                     const Padding(
@@ -2579,14 +2737,116 @@ class _FormPageState extends State<FormPage> {
                                                         ),
                                                         labelText:
                                                             'Preço unitário (R\$)',
-                                                            suffixText: 'reais',
+                                                        suffixText: 'reais',
                                                       ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 10.0,
+                                                              top: 20,
+                                                              bottom: 10),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                            'Em quais meses do ano o produto \nestá disponível para comercialização?',
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontSize: 15,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    ExpansionTile(
+                                                      title: Text(
+                                                        'Meses de Comercialização',
+                                                        style: TextStyle(
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w300),
+                                                      ),
+                                                      children: [
+                                                        Column(
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                Checkbox(
+                                                                  value:
+                                                                      _allMonthsSelectedProcessadoVegetal[
+                                                                          index],
+                                                                  onChanged:
+                                                                      (value) {
+                                                                    setState(
+                                                                        () {
+                                                                      _allMonthsSelectedProcessadoVegetal[
+                                                                              index] =
+                                                                          value!;
+                                                                      if (value) {
+                                                                        for (int i =
+                                                                                0;
+                                                                            i < 12;
+                                                                            i++) {
+                                                                          _selectedMonthsProcessadoVegetal[index][i] =
+                                                                              true;
+                                                                        }
+                                                                      } else {
+                                                                        for (int i =
+                                                                                0;
+                                                                            i < 12;
+                                                                            i++) {
+                                                                          _selectedMonthsProcessadoVegetal[index][i] =
+                                                                              false;
+                                                                        }
+                                                                      }
+                                                                    });
+                                                                  },
+                                                                ),
+                                                                Text(
+                                                                    'Todos os Meses'),
+                                                              ],
+                                                            ),
+                                                            for (int i = 1;
+                                                                i <= 12;
+                                                                i++)
+                                                              Row(
+                                                                children: [
+                                                                  Checkbox(
+                                                                    value: _selectedMonthsProcessadoVegetal[
+                                                                            index]
+                                                                        [i - 1],
+                                                                    onChanged:
+                                                                        (value) {
+                                                                      setState(
+                                                                          () {
+                                                                        _selectedMonthsProcessadoVegetal[index][i -
+                                                                                1] =
+                                                                            value!;
+                                                                        if (value &&
+                                                                            _allMonthsSelectedProcessadoVegetal[index]) {
+                                                                          _allMonthsSelectedProcessadoVegetal[index] =
+                                                                              false;
+                                                                        }
+                                                                      });
+                                                                    },
+                                                                  ),
+                                                                  Text(
+                                                                      getMonthName(
+                                                                          i)),
+                                                                ],
+                                                              ),
+                                                          ],
+                                                        ),
+                                                      ],
                                                     ),
                                                   ],
                                                 ),
-                                              ),
-                                              const SizedBox(
-                                                height: 10,
                                               ),
                                               Visibility(
                                                   visible:
@@ -2604,9 +2864,6 @@ class _FormPageState extends State<FormPage> {
                               ),
                             ],
                           ),
-                        const Divider(
-                          thickness: 1,
-                        ),
                         const Padding(
                           padding: EdgeInsets.all(20.0),
                           child: Row(
@@ -2745,11 +3002,12 @@ class _FormPageState extends State<FormPage> {
                                               index]
                                           : null;
                                   final quantidadePerdidaAnimaisController =
-                                  quantidadePerdidadeAnimaisControllers.length >
-                                      index
-                                      ? quantidadePerdidadeAnimaisControllers[
-                                  index]
-                                      : null;
+                                      quantidadePerdidadeAnimaisControllers
+                                                  .length >
+                                              index
+                                          ? quantidadePerdidadeAnimaisControllers[
+                                              index]
+                                          : null;
                                   return Column(
                                     children: [
                                       Padding(
@@ -2820,7 +3078,7 @@ class _FormPageState extends State<FormPage> {
                                                         TextEditingController());
                                                 quantidadePerdidadeAnimaisControllers
                                                     .add(
-                                                    TextEditingController());
+                                                        TextEditingController());
                                               } else {
                                                 int index = _selectedAnimais
                                                     .indexOf(value!);
@@ -2981,8 +3239,7 @@ class _FormPageState extends State<FormPage> {
                                                             width: 0.5,
                                                             color: Colors.red),
                                                   ),
-                                                  labelText:
-                                                      'Volume produzido',
+                                                  labelText: 'Volume produzido',
                                                   suffixText: 'quilos',
                                                 ),
                                               ),
@@ -3063,13 +3320,13 @@ class _FormPageState extends State<FormPage> {
                                                     bottom: 10),
                                                 child: Row(
                                                   mainAxisAlignment:
-                                                  MainAxisAlignment.start,
+                                                      MainAxisAlignment.start,
                                                   children: [
                                                     Text(
                                                       'Quanto da produção foi perdida?',
                                                       style: TextStyle(
                                                           fontWeight:
-                                                          FontWeight.w500,
+                                                              FontWeight.w500,
                                                           fontSize: 15),
                                                     ),
                                                   ],
@@ -3077,50 +3334,50 @@ class _FormPageState extends State<FormPage> {
                                               ),
                                               TextFormField(
                                                 validator: (value) =>
-                                                value != null &&
-                                                    value.isEmpty
-                                                    ? 'Preencha o Campo'
-                                                    : null,
+                                                    value != null &&
+                                                            value.isEmpty
+                                                        ? 'Preencha o Campo'
+                                                        : null,
                                                 keyboardType:
-                                                TextInputType.number,
+                                                    TextInputType.number,
                                                 controller:
-                                                quantidadePerdidaAnimaisController,
+                                                    quantidadePerdidaAnimaisController,
                                                 decoration: InputDecoration(
                                                   filled: true,
                                                   fillColor: Colors.white,
                                                   border: OutlineInputBorder(
                                                     borderRadius:
-                                                    BorderRadius.circular(
-                                                        30),
+                                                        BorderRadius.circular(
+                                                            30),
                                                     borderSide:
-                                                    const BorderSide(
-                                                        width: 0.8,
-                                                        color:
-                                                        Colors.white),
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
                                                   ),
                                                   enabledBorder:
-                                                  OutlineInputBorder(
+                                                      OutlineInputBorder(
                                                     borderRadius:
-                                                    BorderRadius.circular(
-                                                        30),
+                                                        BorderRadius.circular(
+                                                            30),
                                                     borderSide:
-                                                    const BorderSide(
-                                                        width: 0.8,
-                                                        color:
-                                                        Colors.white),
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
                                                   ),
                                                   errorBorder:
-                                                  OutlineInputBorder(
+                                                      OutlineInputBorder(
                                                     borderRadius:
-                                                    BorderRadius.circular(
-                                                        30),
+                                                        BorderRadius.circular(
+                                                            30),
                                                     borderSide:
-                                                    const BorderSide(
-                                                        width: 0.5,
-                                                        color: Colors.red),
+                                                        const BorderSide(
+                                                            width: 0.5,
+                                                            color: Colors.red),
                                                   ),
                                                   labelText:
-                                                  'Quanto foi perdido?',
+                                                      'Quanto foi perdido?',
                                                   suffixText: 'quilos',
                                                 ),
                                               ),
@@ -3337,8 +3594,113 @@ class _FormPageState extends State<FormPage> {
                                                         ),
                                                         labelText:
                                                             'Preço unitário',
-                                                            suffixText: 'reais',
+                                                        suffixText: 'reais',
                                                       ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 10.0,
+                                                              top: 20,
+                                                              bottom: 10),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                            'Em quais meses do ano o produto \nestá disponível para comercialização?',
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontSize: 15,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    ExpansionTile(
+                                                      title: Text(
+                                                        'Meses de Comercialização',
+                                                        style: TextStyle(
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w300),
+                                                      ),
+                                                      children: [
+                                                        Column(
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                Checkbox(
+                                                                  value:
+                                                                      _allMonthsSelectedAnimal[
+                                                                          index],
+                                                                  onChanged:
+                                                                      (value) {
+                                                                    setState(
+                                                                        () {
+                                                                      _allMonthsSelectedAnimal[
+                                                                              index] =
+                                                                          value!;
+                                                                      if (value) {
+                                                                        for (int i =
+                                                                                0;
+                                                                            i < 12;
+                                                                            i++) {
+                                                                          _selectedMonthsAnimal[index][i] =
+                                                                              true;
+                                                                        }
+                                                                      } else {
+                                                                        for (int i =
+                                                                                0;
+                                                                            i < 12;
+                                                                            i++) {
+                                                                          _selectedMonthsAnimal[index][i] =
+                                                                              false;
+                                                                        }
+                                                                      }
+                                                                    });
+                                                                  },
+                                                                ),
+                                                                Text(
+                                                                    'Todos os Meses'),
+                                                              ],
+                                                            ),
+                                                            for (int i = 1;
+                                                                i <= 12;
+                                                                i++)
+                                                              Row(
+                                                                children: [
+                                                                  Checkbox(
+                                                                    value: _selectedMonthsAnimal[
+                                                                            index]
+                                                                        [i - 1],
+                                                                    onChanged:
+                                                                        (value) {
+                                                                      setState(
+                                                                          () {
+                                                                        _selectedMonthsAnimal[index][i -
+                                                                                1] =
+                                                                            value!;
+                                                                        if (value &&
+                                                                            _allMonthsSelectedAnimal[index]) {
+                                                                          _allMonthsSelectedAnimal[index] =
+                                                                              false;
+                                                                        }
+                                                                      });
+                                                                    },
+                                                                  ),
+                                                                  Text(
+                                                                      getMonthName(
+                                                                          i)),
+                                                                ],
+                                                              ),
+                                                          ],
+                                                        ),
+                                                      ],
                                                     ),
                                                   ],
                                                 ),
@@ -3522,12 +3884,12 @@ class _FormPageState extends State<FormPage> {
                                               index]
                                           : null;
                                   final quantidadePerdidadeProcessadosAnimaissController =
-                                  quantidadePerdidadeProcessadosAnimaissControllers
-                                      .length >
-                                      index
-                                      ? quantidadePerdidadeProcessadosAnimaissControllers[
-                                  index]
-                                      : null;
+                                      quantidadePerdidadeProcessadosAnimaissControllers
+                                                  .length >
+                                              index
+                                          ? quantidadePerdidadeProcessadosAnimaissControllers[
+                                              index]
+                                          : null;
                                   return Column(
                                     children: [
                                       Padding(
@@ -3607,7 +3969,7 @@ class _FormPageState extends State<FormPage> {
                                                         TextEditingController());
                                                 quantidadePerdidadeProcessadosAnimaissControllers
                                                     .add(
-                                                    TextEditingController());
+                                                        TextEditingController());
                                               } else {
                                                 int index =
                                                     _selectedProcessadosAnimais
@@ -3852,13 +4214,13 @@ class _FormPageState extends State<FormPage> {
                                                     bottom: 10),
                                                 child: Row(
                                                   mainAxisAlignment:
-                                                  MainAxisAlignment.start,
+                                                      MainAxisAlignment.start,
                                                   children: [
                                                     Text(
                                                       'Quanto da produção foi perdida?',
                                                       style: TextStyle(
                                                           fontWeight:
-                                                          FontWeight.w500,
+                                                              FontWeight.w500,
                                                           fontSize: 15),
                                                     ),
                                                   ],
@@ -3866,50 +4228,50 @@ class _FormPageState extends State<FormPage> {
                                               ),
                                               TextFormField(
                                                 validator: (value) =>
-                                                value != null &&
-                                                    value.isEmpty
-                                                    ? 'Preencha o Campo'
-                                                    : null,
+                                                    value != null &&
+                                                            value.isEmpty
+                                                        ? 'Preencha o Campo'
+                                                        : null,
                                                 keyboardType:
-                                                TextInputType.number,
+                                                    TextInputType.number,
                                                 controller:
-                                                quantidadePerdidadeProcessadosAnimaissController,
+                                                    quantidadePerdidadeProcessadosAnimaissController,
                                                 decoration: InputDecoration(
                                                   filled: true,
                                                   fillColor: Colors.white,
                                                   border: OutlineInputBorder(
                                                     borderRadius:
-                                                    BorderRadius.circular(
-                                                        30),
+                                                        BorderRadius.circular(
+                                                            30),
                                                     borderSide:
-                                                    const BorderSide(
-                                                        width: 0.8,
-                                                        color:
-                                                        Colors.white),
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
                                                   ),
                                                   enabledBorder:
-                                                  OutlineInputBorder(
+                                                      OutlineInputBorder(
                                                     borderRadius:
-                                                    BorderRadius.circular(
-                                                        30),
+                                                        BorderRadius.circular(
+                                                            30),
                                                     borderSide:
-                                                    const BorderSide(
-                                                        width: 0.8,
-                                                        color:
-                                                        Colors.white),
+                                                        const BorderSide(
+                                                            width: 0.8,
+                                                            color:
+                                                                Colors.white),
                                                   ),
                                                   errorBorder:
-                                                  OutlineInputBorder(
+                                                      OutlineInputBorder(
                                                     borderRadius:
-                                                    BorderRadius.circular(
-                                                        30),
+                                                        BorderRadius.circular(
+                                                            30),
                                                     borderSide:
-                                                    const BorderSide(
-                                                        width: 0.5,
-                                                        color: Colors.red),
+                                                        const BorderSide(
+                                                            width: 0.5,
+                                                            color: Colors.red),
                                                   ),
                                                   labelText:
-                                                  'Quanto foi perdido?',
+                                                      'Quanto foi perdido?',
                                                   suffixText: 'quilos',
                                                 ),
                                               ),
@@ -4062,7 +4424,7 @@ class _FormPageState extends State<FormPage> {
                                                           ),
                                                           labelText:
                                                               'Volume comercializado',
-                                                              suffixText: 'quilos',
+                                                          suffixText: 'quilos',
                                                         ),
                                                       ),
                                                       const Padding(
@@ -4142,8 +4504,110 @@ class _FormPageState extends State<FormPage> {
                                                           ),
                                                           labelText:
                                                               'Preço unitário (R\$)',
-                                                              suffixText: 'reais',
+                                                          suffixText: 'reais',
                                                         ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 10.0,
+                                                                top: 20,
+                                                                bottom: 10),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              'Em quais meses do ano o produto \nestá disponível para comercialização?',
+                                                              style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                fontSize: 15,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      ExpansionTile(
+                                                        title: Text(
+                                                          'Meses de Comercialização',
+                                                          style: TextStyle(
+                                                              fontSize: 18,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w300),
+                                                        ),
+                                                        children: [
+                                                          Column(
+                                                            children: [
+                                                              Row(
+                                                                children: [
+                                                                  Checkbox(
+                                                                    value: _allMonthsSelectedProcessadoAnimal[
+                                                                        index],
+                                                                    onChanged:
+                                                                        (value) {
+                                                                      setState(
+                                                                          () {
+                                                                        _allMonthsSelectedProcessadoAnimal[index] =
+                                                                            value!;
+                                                                        if (value) {
+                                                                          for (int i = 0;
+                                                                              i < 12;
+                                                                              i++) {
+                                                                            _selectedMonthsProcessadoAnimal[index][i] =
+                                                                                true;
+                                                                          }
+                                                                        } else {
+                                                                          for (int i = 0;
+                                                                              i < 12;
+                                                                              i++) {
+                                                                            _selectedMonthsProcessadoAnimal[index][i] =
+                                                                                false;
+                                                                          }
+                                                                        }
+                                                                      });
+                                                                    },
+                                                                  ),
+                                                                  Text(
+                                                                      'Todos os Meses'),
+                                                                ],
+                                                              ),
+                                                              for (int i = 1;
+                                                                  i <= 12;
+                                                                  i++)
+                                                                Row(
+                                                                  children: [
+                                                                    Checkbox(
+                                                                      value: _selectedMonthsProcessadoAnimal[
+                                                                              index]
+                                                                          [
+                                                                          i - 1],
+                                                                      onChanged:
+                                                                          (value) {
+                                                                        setState(
+                                                                            () {
+                                                                          _selectedMonthsProcessadoAnimal[index][i - 1] =
+                                                                              value!;
+                                                                          if (value &&
+                                                                              _allMonthsSelectedProcessadoAnimal[index]) {
+                                                                            _allMonthsSelectedProcessadoAnimal[index] =
+                                                                                false;
+                                                                          }
+                                                                        });
+                                                                      },
+                                                                    ),
+                                                                    Text(
+                                                                        getMonthName(
+                                                                            i)),
+                                                                  ],
+                                                                ),
+                                                            ],
+                                                          ),
+                                                        ],
                                                       ),
                                                     ],
                                                   )),
