@@ -43,8 +43,8 @@ class BeneficioRepository {
   static List<Beneficios> servicosPublicos = [
     Beneficios(nome: 'Agente de saúde'),
     Beneficios(nome: 'PSF/presença de médico na comunidade/ distrito '),
+    Beneficios(nome: 'Segurança pública'),
     Beneficios(nome: 'Transporte escolar'),
     Beneficios(nome: 'Transporte público'),
-    Beneficios(nome: 'Segurança pública'),
   ];
 }

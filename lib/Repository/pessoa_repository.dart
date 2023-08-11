@@ -11,19 +11,22 @@ class PessoaRepository {
   static var grupoAmostral = ['Beneficiário', 'Controle'];
 
 
-  static var producaoGeral = ['Agroecológica', 'Orgânica certificada', 'Convencional', 'Mista (parte agroecológica ou certificada/ parte convencional)'];
+  static var producaoGeral = ['Convencional',
+    'De base agroecológica',
+    'Orgânica',
+    'Produção paralela (parte orgânica ou de base/ parte convencional)'];
 
   static var identificacaoComunidade = [
+    'Área de uso coletivo da terra',
+    'Assentamento Estadual',
+    'Assentamento Federal',
+    'Comunidade Quilombola',
+    'Comunidade Tradicional',
+    'Posse',
+    'Produtor meeiro',
+    'Projeto do PNCF/ Terra Brasil/ Banco da Terra',
     'Propriedade rural arrendada',
-    ' Posse',
-    ' Produtor meeiro',
-    ' Área de uso coletivo da terra',
-    ' Assentamento Federal',
-    ' Assentamento Estadual',
-    ' Projeto do PNCF/ Terra Brasil/ Banco da Terra',
-    ' Comunidade Quilombola',
-    ' Comunidade Tradicional',
-    ' Terra Indígena',
+    'Terra Indígena'
   ];
 
   static var moradias = ['Edificações aglomeradas', 'Edificações difusas'];
