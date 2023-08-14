@@ -24,17 +24,10 @@ class FormPage extends StatefulWidget {
 }
 
 class _FormPageState extends State<FormPage> {
-  final municipioController = TextEditingController();
-  final comunidadeController = TextEditingController();
   final nameEntrevistadoController = TextEditingController();
   final cpfController = TextEditingController();
-  final nisController = TextEditingController();
   final telefoneController = TextEditingController();
   final quantidadeFamilia = TextEditingController();
-  final nameConjugeController = TextEditingController();
-  final cpfConjugeController = TextEditingController();
-  final nisConjugeController = TextEditingController();
-  final telefoneConjugeController = TextEditingController();
   final controllerLatitude = TextEditingController();
   final controllerLongitude = TextEditingController();
   final user = FirebaseAuth.instance.currentUser!;
@@ -59,11 +52,6 @@ class _FormPageState extends State<FormPage> {
   List<bool> _selectedVegetaisComercializados =
       List.generate(10, (index) => false);
 
-  // List<TextEditingController> parcelaPAAControllers = [];
-  // List<TextEditingController> parcelaMercadosLocaisControllers = [];
-  // List<TextEditingController> parcelaOutrosEstadosControllers = [];
-  // List<TextEditingController> valorCosumoControllers = [];
-
   List<TextEditingController> areaAnimalControllers = [];
   List<TextEditingController> volumeAnimalControllers = [];
   List<TextEditingController> quantidadeAnimalCriadoControllers = [];
@@ -73,9 +61,9 @@ class _FormPageState extends State<FormPage> {
   List<TextEditingController> quantidadePerdidadeAnimaisControllers = [];
   List<bool> _selectedAnimaisComercializados =
       List.generate(10, (index) => false);
-  List<List<bool>> _selectedMonthsAnimal = List.generate(
-    12, // Substitua pelo número adequado de itens na sua lista
-    (index) => List<bool>.filled(12, false),
+  List<MonthData> _selectedMonthsAnimal = List.generate(
+    12,
+        (index) => MonthData(),
   );
   List<bool> _allMonthsSelectedAnimal = List.generate(12, (index) => false);
 
@@ -92,9 +80,9 @@ class _FormPageState extends State<FormPage> {
 
   List<bool> _selectedProcessadosVegetaisComercializados =
       List.generate(10, (index) => false);
-  List<List<bool>> _selectedMonthsProcessadoVegetal = List.generate(
-    12, // Substitua pelo número adequado de itens na sua lista
-    (index) => List<bool>.filled(12, false),
+  List<MonthData> _selectedMonthsProcessadoVegetal = List.generate(
+    12,
+        (index) => MonthData(),
   );
   List<bool> _allMonthsSelectedProcessadoVegetal =
       List.generate(12, (index) => false);
@@ -111,9 +99,9 @@ class _FormPageState extends State<FormPage> {
       quantidadePerdidadeProcessadosAnimaissControllers = [];
   List<bool> _selectedProcessadosAnimalComercializados =
       List.generate(10, (index) => false);
-  List<List<bool>> _selectedMonthsProcessadoAnimal = List.generate(
-    12, // Substitua pelo número adequado de itens na sua lista
-    (index) => List<bool>.filled(12, false),
+  List<MonthData> _selectedMonthsProcessadoAnimal = List.generate(
+    12,
+        (index) => MonthData(),
   );
   List<bool> _allMonthsSelectedProcessadoAnimal =
       List.generate(12, (index) => false);
@@ -129,12 +117,6 @@ class _FormPageState extends State<FormPage> {
 
   List<bool> expanded = [false, false];
 
-  // String? _selectedGender;
-  // String? _selectedGroup;
-  // String? _selectedComunity;
-  // String? _selectedMoradias;
-  // String? _selectedMaritalStatus;
-  // String? _selectedMunicipio;
   String? _selectedUnidade;
   String? _selectedProducao;
   bool usaAgrotoxico = false;
@@ -153,8 +135,6 @@ class _FormPageState extends State<FormPage> {
   final List<String> _selectedCanais = [];
   final List<String> _selectedCertificacao = [];
   final List<String> _selectedDAP = [];
-  final List<String> _selectedBeneficios = [];
-  final List<String> _selectedActivities = [];
   final List<String> _selectedVegetais = [];
   final List<String> _selectedProcessadosVegetais = [];
   final List<String> _selectedProcessadosAnimais = [];
@@ -163,7 +143,7 @@ class _FormPageState extends State<FormPage> {
   int _quantidadeProcessadosVegetaisProduzidos = 1;
   int _quantidadeProcessadosAnimaisProduzidos = 1;
   int _quantidadeAnimaisCriados = 1;
-  List<int> importances = List<int>.filled(16, 0);
+
 
   saveAll() async {
     // Criar uma instância do Firestore
@@ -208,11 +188,8 @@ class _FormPageState extends State<FormPage> {
       final quantidadeColhidaController = quantidadeColhidaControllers[i];
       final parcelaConsumo = parcelaCosumoControllers[i];
       final parcelaPerdida = quantidadePerdidadeVegetaisControllers[i];
-
-
       final quantidadeVendidaController = quantidadeVendidaControllers[i];
       final precoUnitarioController = precoUnitarioControllers[i];
-
 
       // Converter as strings para inteiros
       final areaPuraValue = int.parse(areaPuraController.text);
@@ -226,16 +203,16 @@ class _FormPageState extends State<FormPage> {
 
       // Criar um mapa com as informações do item
       Map<String, dynamic> itemDataVegetal = {
-        'NomeItem': _selectedVegetais[i],
-        'AreaProducao': areaPuraValue,
-        'VolumeProduzido': quantidadeColhidaValue,
-        'VolumeAutoConsumo': parcelaConsumoValue,
-        'VolumePerdido': parcelaPerdidaValue,
-        'Organico': usaAgrotoxico ? 'Não' : 'Sim',
-        'VolumeVendido': quantidadeVendidaValue,
-        'PrecoUnitario': precoUnitarioValue,
-        'ValorTotalVendas': quantidadeVendidaValue * precoUnitarioValue,
-        'MesesComercializado': _selectedMonthsVegetal[i].months,
+        '01 - NomeItem': _selectedVegetais[i],
+        '02 - AreaProducao': areaPuraValue,
+        '03 - VolumeProduzido': quantidadeColhidaValue,
+        '04 - VolumeAutoConsumo': parcelaConsumoValue,
+        '05 - VolumePerdido': parcelaPerdidaValue,
+        '06 - Organico': usaAgrotoxico ? 'Não' : 'Sim',
+        '07 - VolumeComercializado': quantidadeVendidaValue,
+        '08 - PrecoUnitario': precoUnitarioValue,
+        '09 - ValorTotalVendas': quantidadeVendidaValue * precoUnitarioValue,
+        '10 - MesesComercializado': _selectedMonthsVegetal[i].months,
       };
 
       // Adicionar o item à lista de itensVegetais
@@ -264,17 +241,15 @@ class _FormPageState extends State<FormPage> {
 
       // Criar um mapa com as informações do item
       Map<String, dynamic> itemDataProcessadoVegetal = {
-        'NomeItem': _selectedProcessadosVegetais[i],
-        'AreaProducao': areaPuraValue,
-        'VolumeProduzido': quantidadeProduzidaValue,
-        'VolumeAutoConsumo': parcelaConsumoValue,
-        'VolumePerdido':parcelaPerdidaValue,
-        // 'Comercializado': _selectedProcessadosVegetaisComercializados[
-        // i] ? 'Sim' : 'Não',
-        'VolumeComercializado': quantidadeVendidaValue,
-        'PrecoUnitario': precoUnitarioValue,
-        'ValorTotalVendas': quantidadeVendidaValue * precoUnitarioValue,
-        // 'MesesComercializado': _selectedMonthsProcessadoVegetal[i]
+        '01 - NomeItem': _selectedProcessadosVegetais[i],
+        '02 - AreaProducao': areaPuraValue,
+        '03 - VolumeProduzido': quantidadeProduzidaValue,
+        '04 - VolumeAutoConsumo': parcelaConsumoValue,
+        '05 - VolumePerdido':parcelaPerdidaValue,
+        '06 - VolumeComercializado': quantidadeVendidaValue,
+        '07 - PrecoUnitario': precoUnitarioValue,
+        '08 - ValorTotalVendas': quantidadeVendidaValue * precoUnitarioValue,
+        '09 - MesesComercializado': _selectedMonthsProcessadoVegetal[i].months
       };
 
       // Adicionar o item à lista de itensVegetais
@@ -303,14 +278,15 @@ class _FormPageState extends State<FormPage> {
 
       // Criar um mapa com as informações do item
       Map<String, dynamic> itemDataAnimal = {
-        'NomeItem': _selectedAnimais[i],
-        'AreaProducao': areaPuraValue,
-        'VolumeProduzido': volumeProduzidoValue,
-        'VolumeAutoConsumo': parcelaConsumoValue,
-        'VolumePerdido': parcelaPerdidaValue,
-        'Volumevendido': quantidadeVendidaValue,
-        'PrecoUnitario': precoUnitarioValue,
-        'ValorTotalVendas': quantidadeVendidaValue * precoUnitarioValue,
+        '01 - NomeItem': _selectedAnimais[i],
+        '02 - AreaProducao': areaPuraValue,
+        '03 - VolumeProduzido': volumeProduzidoValue,
+        '04 - VolumeAutoConsumo': parcelaConsumoValue,
+        '05 - VolumePerdido': parcelaPerdidaValue,
+        '06 - Volumevendido': quantidadeVendidaValue,
+        '07 - PrecoUnitario': precoUnitarioValue,
+        '08 - ValorTotalVendas': quantidadeVendidaValue * precoUnitarioValue,
+        '09 - MesesComercializado': _selectedMonthsAnimal[i].months
       };
 
       // Adicionar o item à lista de itensVegetais
@@ -339,22 +315,20 @@ class _FormPageState extends State<FormPage> {
 
       // Criar um mapa com as informações do item
       Map<String, dynamic> itemDataProcessadoAnimal = {
-        'NomeItem': _selectedProcessadosAnimais[i],
-        'AreaProducao': areaPuraValue,
-        'VolumeProduzido': quantidadeColhidaValue,
-        'VolumeAutoConsumo': parcelaConsumoValue,
-        'VolumePerdido': parcelaPeriddaValue,
-        'QuantidadeVendida': quantidadeVendidaValue,
-        'PrecoUnitario': precoUnitarioValue,
-        'ValorTotalVendas': quantidadeVendidaValue * precoUnitarioValue,
-
-        // 'ValorConsumo': valorConsumoValue,
+        '01 - NomeItem': _selectedProcessadosAnimais[i],
+        '02 - AreaProducao': areaPuraValue,
+        '03 - VolumeProduzido': quantidadeColhidaValue,
+        '04 - VolumeAutoConsumo': parcelaConsumoValue,
+        '05 - VolumePerdido': parcelaPeriddaValue,
+        '06 - QuantidadeVendida': quantidadeVendidaValue,
+        '07 - PrecoUnitario': precoUnitarioValue,
+        '08 - ValorTotalVendas': quantidadeVendidaValue * precoUnitarioValue,
+        '09 - MesesComercializado': _selectedMonthsProcessadoAnimal[i].months
       };
 
       // Adicionar o item à lista de itensVegetais
       itensProcessadosAnimais.add(itemDataProcessadoAnimal);
     }
-
 
     late DateTime selectedDate = DateTime.now();
     // Obter a data atual com hora zero
@@ -2936,67 +2910,39 @@ class _FormPageState extends State<FormPage> {
                                                                 Row(
                                                                   children: [
                                                                     Checkbox(
-                                                                      value:
-                                                                      _allMonthsSelectedProcessadoVegetal[
-                                                                      index],
-                                                                      onChanged:
-                                                                          (value) {
+                                                                      value: _allMonthsSelectedProcessadoVegetal[index],
+                                                                      onChanged: (value) {
                                                                         setState(
-                                                                                () {
-                                                                              _allMonthsSelectedProcessadoVegetal[
-                                                                              index] =
-                                                                              value!;
-                                                                              if (value) {
-                                                                                for (int i =
-                                                                                0;
-                                                                                i < 12;
-                                                                                i++) {
-                                                                                  _selectedMonthsProcessadoVegetal[index][i] =
-                                                                                  true;
-                                                                                }
-                                                                              } else {
-                                                                                for (int i =
-                                                                                0;
-                                                                                i < 12;
-                                                                                i++) {
-                                                                                  _selectedMonthsProcessadoVegetal[index][i] =
-                                                                                  false;
-                                                                                }
-                                                                              }
+                                                                              () {
+                                                                                _allMonthsSelectedProcessadoVegetal[index] = value!;
+                                                                            final allSelected = _allMonthsSelectedProcessadoVegetal[index];
+                                                                            _selectedMonthsProcessadoVegetal[index].months.forEach((month, _) {
+                                                                              _selectedMonthsProcessadoVegetal[index].months[month] = allSelected;
                                                                             });
+                                                                          },
+                                                                        );
                                                                       },
                                                                     ),
-                                                                    Text(
-                                                                        'Todos os Meses'),
+                                                                    Text('Todos os Meses'),
                                                                   ],
                                                                 ),
-                                                                for (int i = 1;
-                                                                i <= 12;
-                                                                i++)
+                                                                for (final month in _selectedMonthsProcessadoVegetal[index].months.keys)
                                                                   Row(
                                                                     children: [
                                                                       Checkbox(
-                                                                        value: _selectedMonthsProcessadoVegetal[
-                                                                        index]
-                                                                        [i - 1],
-                                                                        onChanged:
-                                                                            (value) {
+                                                                        value: _selectedMonthsProcessadoVegetal[index].months[month],
+                                                                        onChanged: (value) {
                                                                           setState(
-                                                                                  () {
-                                                                                _selectedMonthsProcessadoVegetal[index][i -
-                                                                                    1] =
-                                                                                value!;
-                                                                                if (value &&
-                                                                                    _allMonthsSelectedProcessadoVegetal[index]) {
-                                                                                  _allMonthsSelectedProcessadoVegetal[index] =
-                                                                                  false;
-                                                                                }
-                                                                              });
+                                                                                () {
+                                                                                  _selectedMonthsProcessadoVegetal[index].months[month] = value!;
+                                                                              if (value && _allMonthsSelectedProcessadoVegetal[index]) {
+                                                                                _allMonthsSelectedProcessadoVegetal[index] = false;
+                                                                              }
+                                                                            },
+                                                                          );
                                                                         },
                                                                       ),
-                                                                      Text(
-                                                                          getMonthName(
-                                                                              i)),
+                                                                      Text(month),
                                                                     ],
                                                                   ),
                                                               ],
@@ -3807,67 +3753,39 @@ class _FormPageState extends State<FormPage> {
                                                                 Row(
                                                                   children: [
                                                                     Checkbox(
-                                                                      value:
-                                                                      _allMonthsSelectedAnimal[
-                                                                      index],
-                                                                      onChanged:
-                                                                          (value) {
+                                                                      value: _allMonthsSelectedAnimal[index],
+                                                                      onChanged: (value) {
                                                                         setState(
-                                                                                () {
-                                                                              _allMonthsSelectedAnimal[
-                                                                              index] =
-                                                                              value!;
-                                                                              if (value) {
-                                                                                for (int i =
-                                                                                0;
-                                                                                i < 12;
-                                                                                i++) {
-                                                                                  _selectedMonthsAnimal[index][i] =
-                                                                                  true;
-                                                                                }
-                                                                              } else {
-                                                                                for (int i =
-                                                                                0;
-                                                                                i < 12;
-                                                                                i++) {
-                                                                                  _selectedMonthsAnimal[index][i] =
-                                                                                  false;
-                                                                                }
-                                                                              }
+                                                                              () {
+                                                                                _allMonthsSelectedAnimal[index] = value!;
+                                                                            final allSelected = _allMonthsSelectedAnimal[index];
+                                                                            _selectedMonthsAnimal[index].months.forEach((month, _) {
+                                                                              _selectedMonthsAnimal[index].months[month] = allSelected;
                                                                             });
+                                                                          },
+                                                                        );
                                                                       },
                                                                     ),
-                                                                    Text(
-                                                                        'Todos os Meses'),
+                                                                    Text('Todos os Meses'),
                                                                   ],
                                                                 ),
-                                                                for (int i = 1;
-                                                                i <= 12;
-                                                                i++)
+                                                                for (final month in _selectedMonthsAnimal[index].months.keys)
                                                                   Row(
                                                                     children: [
                                                                       Checkbox(
-                                                                        value: _selectedMonthsAnimal[
-                                                                        index]
-                                                                        [i - 1],
-                                                                        onChanged:
-                                                                            (value) {
+                                                                        value: _selectedMonthsAnimal[index].months[month],
+                                                                        onChanged: (value) {
                                                                           setState(
-                                                                                  () {
-                                                                                _selectedMonthsAnimal[index][i -
-                                                                                    1] =
-                                                                                value!;
-                                                                                if (value &&
-                                                                                    _allMonthsSelectedAnimal[index]) {
-                                                                                  _allMonthsSelectedAnimal[index] =
-                                                                                  false;
-                                                                                }
-                                                                              });
+                                                                                () {
+                                                                                  _selectedMonthsAnimal[index].months[month] = value!;
+                                                                              if (value && _allMonthsSelectedAnimal[index]) {
+                                                                                _allMonthsSelectedAnimal[index] = false;
+                                                                              }
+                                                                            },
+                                                                          );
                                                                         },
                                                                       ),
-                                                                      Text(
-                                                                          getMonthName(
-                                                                              i)),
+                                                                      Text(month),
                                                                     ],
                                                                   ),
                                                               ],
@@ -4719,63 +4637,39 @@ class _FormPageState extends State<FormPage> {
                                                                   Row(
                                                                     children: [
                                                                       Checkbox(
-                                                                        value: _allMonthsSelectedProcessadoAnimal[
-                                                                        index],
-                                                                        onChanged:
-                                                                            (value) {
+                                                                        value: _allMonthsSelectedProcessadoAnimal[index],
+                                                                        onChanged: (value) {
                                                                           setState(
-                                                                                  () {
-                                                                                _allMonthsSelectedProcessadoAnimal[index] =
-                                                                                value!;
-                                                                                if (value) {
-                                                                                  for (int i = 0;
-                                                                                  i < 12;
-                                                                                  i++) {
-                                                                                    _selectedMonthsProcessadoAnimal[index][i] =
-                                                                                    true;
-                                                                                  }
-                                                                                } else {
-                                                                                  for (int i = 0;
-                                                                                  i < 12;
-                                                                                  i++) {
-                                                                                    _selectedMonthsProcessadoAnimal[index][i] =
-                                                                                    false;
-                                                                                  }
-                                                                                }
+                                                                                () {
+                                                                                  _allMonthsSelectedProcessadoAnimal[index] = value!;
+                                                                              final allSelected = _allMonthsSelectedProcessadoAnimal[index];
+                                                                              _selectedMonthsProcessadoAnimal[index].months.forEach((month, _) {
+                                                                                _selectedMonthsProcessadoAnimal[index].months[month] = allSelected;
                                                                               });
+                                                                            },
+                                                                          );
                                                                         },
                                                                       ),
-                                                                      Text(
-                                                                          'Todos os Meses'),
+                                                                      Text('Todos os Meses'),
                                                                     ],
                                                                   ),
-                                                                  for (int i = 1;
-                                                                  i <= 12;
-                                                                  i++)
+                                                                  for (final month in _selectedMonthsProcessadoAnimal[index].months.keys)
                                                                     Row(
                                                                       children: [
                                                                         Checkbox(
-                                                                          value: _selectedMonthsProcessadoAnimal[
-                                                                          index]
-                                                                          [
-                                                                          i - 1],
-                                                                          onChanged:
-                                                                              (value) {
+                                                                          value: _selectedMonthsProcessadoAnimal[index].months[month],
+                                                                          onChanged: (value) {
                                                                             setState(
-                                                                                    () {
-                                                                                  _selectedMonthsProcessadoAnimal[index][i - 1] =
-                                                                                  value!;
-                                                                                  if (value &&
-                                                                                      _allMonthsSelectedProcessadoAnimal[index]) {
-                                                                                    _allMonthsSelectedProcessadoAnimal[index] =
-                                                                                    false;
-                                                                                  }
-                                                                                });
+                                                                                  () {
+                                                                                    _selectedMonthsProcessadoAnimal[index].months[month] = value!;
+                                                                                if (value && _allMonthsSelectedProcessadoAnimal[index]) {
+                                                                                  _allMonthsSelectedProcessadoAnimal[index] = false;
+                                                                                }
+                                                                              },
+                                                                            );
                                                                           },
                                                                         ),
-                                                                        Text(
-                                                                            getMonthName(
-                                                                                i)),
+                                                                        Text(month),
                                                                       ],
                                                                     ),
                                                                 ],
