@@ -13,6 +13,7 @@ import 'package:projeto_agricultura_familiar/Repository/processados_repository.d
 import 'package:projeto_agricultura_familiar/Repository/unidades_familiares_repository.dart';
 import 'package:projeto_agricultura_familiar/Repository/vegetais_repository.dart';
 
+import '../Models/meses.dart';
 import '../Repository/animais_repository.dart';
 
 class FormPage extends StatefulWidget {
@@ -26,7 +27,6 @@ class _FormPageState extends State<FormPage> {
   final municipioController = TextEditingController();
   final comunidadeController = TextEditingController();
   final nameEntrevistadoController = TextEditingController();
-  final nameChefeFamiliaController = TextEditingController();
   final cpfController = TextEditingController();
   final nisController = TextEditingController();
   final telefoneController = TextEditingController();
@@ -50,9 +50,9 @@ class _FormPageState extends State<FormPage> {
   List<TextEditingController> precoUnitarioControllers = [];
   List<TextEditingController> parcelaCosumoControllers = [];
   List<TextEditingController> quantidadePerdidadeVegetaisControllers = [];
-  List<List<bool>> _selectedMonthsVegetal = List.generate(
-    12, // Substitua pelo número adequado de itens na sua lista
-    (index) => List<bool>.filled(12, false),
+  List<MonthData> _selectedMonthsVegetal = List.generate(
+    12,
+        (index) => MonthData(),
   );
   List<bool> _allMonthsSelectedVegetal = List.generate(12, (index) => false);
   List<bool> _selectedVegetaisOrganicos = List.generate(10, (index) => true);
@@ -201,57 +201,162 @@ class _FormPageState extends State<FormPage> {
     double latitude = position.latitude;
     double longitude = position.longitude;
 
-    // Crie uma lista para armazenar os itens
-    List<Map<String, dynamic>> itens = [];
-
+    // Crie uma lista para armazenar os itensVegetais
+    List<Map<String, dynamic>> itensVegetais = [];
     for (var i = 0; i < _selectedVegetais.length; i++) {
       final areaPuraController = areaPuraControllers[i];
-      final areaConsorciadaController = areaConsorciadaControllers[i];
       final quantidadeColhidaController = quantidadeColhidaControllers[i];
+      final parcelaConsumo = parcelaCosumoControllers[i];
+      final parcelaPerdida = quantidadePerdidadeVegetaisControllers[i];
+
+
       final quantidadeVendidaController = quantidadeVendidaControllers[i];
       final precoUnitarioController = precoUnitarioControllers[i];
-      // final parcelaPAA = parcelaPAAControllers[i];
-      // final parcelaMercadosLocais = parcelaMercadosLocaisControllers[i];
-      // final parcelaOutrosEstados = parcelaOutrosEstadosControllers[i];
-      final parcelaConsumo = parcelaCosumoControllers[i];
-      // final valorConsumo = valorCosumoControllers[i];
+
 
       // Converter as strings para inteiros
       final areaPuraValue = int.parse(areaPuraController.text);
-      final areaConsorciadaValue = int.parse(areaConsorciadaController.text);
       final quantidadeColhidaValue =
-          int.parse(quantidadeColhidaController.text);
+      int.parse(quantidadeColhidaController.text);
       final quantidadeVendidaValue =
-          int.parse(quantidadeVendidaController.text);
+      int.parse(quantidadeVendidaController.text);
       final precoUnitarioValue = double.parse(precoUnitarioController.text);
-      // final parcelaPAAValue = int.parse(parcelaPAA.text);
-      // final parcelaMercadosLocaisValue = int.parse(parcelaMercadosLocais.text);
-      // final parcelaOutrosEstadosValue = int.parse(parcelaOutrosEstados.text);
       final parcelaConsumoValue = int.parse(parcelaConsumo.text);
-      // final valorConsumoValue = int.parse(valorConsumo.text);
+      final parcelaPerdidaValue = int.parse(parcelaPerdida.text);
 
       // Criar um mapa com as informações do item
       Map<String, dynamic> itemDataVegetal = {
         'NomeItem': _selectedVegetais[i],
-        'AreaPura': areaPuraValue,
-        'AreaConsorciada': areaConsorciadaValue,
-        'QuantidadeColhida': quantidadeColhidaValue,
+        'AreaProducao': areaPuraValue,
+        'VolumeProduzido': quantidadeColhidaValue,
+        'VolumeAutoConsumo': parcelaConsumoValue,
+        'VolumePerdido': parcelaPerdidaValue,
+        'Organico': usaAgrotoxico ? 'Não' : 'Sim',
+        'VolumeVendido': quantidadeVendidaValue,
+        'PrecoUnitario': precoUnitarioValue,
+        'ValorTotalVendas': quantidadeVendidaValue * precoUnitarioValue,
+        'MesesComercializado': _selectedMonthsVegetal[i].months,
+      };
+
+      // Adicionar o item à lista de itensVegetais
+      itensVegetais.add(itemDataVegetal);
+    }
+
+    List<Map<String, dynamic>> itensProcessadosVegetais = [];
+    for (var i = 0; i < _selectedProcessadosVegetais.length; i++) {
+      final areaProcessadosVegetaisController = areaProcessadosVegetalControllers[i];
+      final quantidadeProduzidaProcessadosVegetalController = quantidadeProduzidaProcessadosVegetalControllers[i];
+      final quantidadeVendidaProcessadosVegetalController = quantidadeVendidaProcessadosVegetalControllers[i];
+      final precoProcessadosVegetalUnitarioController = precoProcessadosVegetalUnitarioControllers[i];
+      final parcelaProcessadosVegetalCosumoController = parcelaProcessadosVegetalCosumoControllers[i];
+      final quantidadePerdidaProcessadosVegetaisController = quantidadePerdidadeProcessadosVegetaisControllers[i];
+
+      // Converter as strings para inteiros
+      final areaPuraValue = int.parse(areaProcessadosVegetaisController.text);
+      final quantidadeProduzidaValue =
+      int.parse(quantidadeProduzidaProcessadosVegetalController.text);
+      final quantidadeVendidaValue =
+      int.parse(quantidadeVendidaProcessadosVegetalController.text);
+      final precoUnitarioValue = double.parse(precoProcessadosVegetalUnitarioController.text);
+      final parcelaConsumoValue = int.parse(parcelaProcessadosVegetalCosumoController.text);
+      final parcelaPerdidaValue = int.parse(quantidadePerdidaProcessadosVegetaisController.text);
+
+
+      // Criar um mapa com as informações do item
+      Map<String, dynamic> itemDataProcessadoVegetal = {
+        'NomeItem': _selectedProcessadosVegetais[i],
+        'AreaProducao': areaPuraValue,
+        'VolumeProduzido': quantidadeProduzidaValue,
+        'VolumeAutoConsumo': parcelaConsumoValue,
+        'VolumePerdido':parcelaPerdidaValue,
+        // 'Comercializado': _selectedProcessadosVegetaisComercializados[
+        // i] ? 'Sim' : 'Não',
+        'VolumeComercializado': quantidadeVendidaValue,
+        'PrecoUnitario': precoUnitarioValue,
+        'ValorTotalVendas': quantidadeVendidaValue * precoUnitarioValue,
+        // 'MesesComercializado': _selectedMonthsProcessadoVegetal[i]
+      };
+
+      // Adicionar o item à lista de itensVegetais
+      itensProcessadosVegetais.add(itemDataProcessadoVegetal);
+    }
+
+    List<Map<String, dynamic>> itensAnimais = [];
+    for (var i = 0; i < _selectedAnimais.length; i++) {
+      final areaPuraController = areaAnimalControllers[i];
+      final volumeProduzidoController = volumeAnimalControllers[i];
+      final quantidadeVendidaController = quantidadeAnimalVendidoControllers[i];
+      final precoUnitarioController = precoAnimalUnitarioControllers[i];
+      final parcelaConsumo = parcelaAnimalCosumoControllers[i];
+      final parcelaPerdida = quantidadePerdidadeAnimaisControllers[i];
+
+      // Converter as strings para inteiros
+      final areaPuraValue = int.parse(areaPuraController.text);
+      final volumeProduzidoValue =
+      int.parse(volumeProduzidoController.text);
+      final quantidadeVendidaValue =
+      int.parse(quantidadeVendidaController.text);
+      final precoUnitarioValue = double.parse(precoUnitarioController.text);
+      final parcelaConsumoValue = int.parse(parcelaConsumo.text);
+      final parcelaPerdidaValue = int.parse(parcelaPerdida.text);
+
+
+      // Criar um mapa com as informações do item
+      Map<String, dynamic> itemDataAnimal = {
+        'NomeItem': _selectedAnimais[i],
+        'AreaProducao': areaPuraValue,
+        'VolumeProduzido': volumeProduzidoValue,
+        'VolumeAutoConsumo': parcelaConsumoValue,
+        'VolumePerdido': parcelaPerdidaValue,
+        'Volumevendido': quantidadeVendidaValue,
+        'PrecoUnitario': precoUnitarioValue,
+        'ValorTotalVendas': quantidadeVendidaValue * precoUnitarioValue,
+      };
+
+      // Adicionar o item à lista de itensVegetais
+      itensAnimais.add(itemDataAnimal);
+    }
+
+    List<Map<String, dynamic>> itensProcessadosAnimais = [];
+    for (var i = 0; i < _selectedProcessadosAnimais.length; i++) {
+      final areaPuraController = areaProcessadosAnimalControllers[i];
+      final volumeProduzidoController = quantidadeProduzidaProcessadosAnimalControllers[i];
+      final quantidadeVendidaController = quantidadeVendidaProcessadosAnimalControllers[i];
+      final precoUnitarioController = precoProcessadosAnimalUnitarioControllers[i];
+      final parcelaConsumo = parcelaProcessadosAnimalCosumoControllers[i];
+      final parcelaPerdida = quantidadePerdidadeProcessadosAnimaissControllers[i];
+
+      // Converter as strings para inteiros
+      final areaPuraValue = int.parse(areaPuraController.text);
+      final quantidadeColhidaValue =
+      int.parse(volumeProduzidoController.text);
+      final quantidadeVendidaValue =
+      int.parse(quantidadeVendidaController.text);
+      final precoUnitarioValue = double.parse(precoUnitarioController.text);
+      final parcelaConsumoValue = int.parse(parcelaConsumo.text);
+      final parcelaPeriddaValue = int.parse(parcelaPerdida.text);
+
+
+      // Criar um mapa com as informações do item
+      Map<String, dynamic> itemDataProcessadoAnimal = {
+        'NomeItem': _selectedProcessadosAnimais[i],
+        'AreaProducao': areaPuraValue,
+        'VolumeProduzido': quantidadeColhidaValue,
+        'VolumeAutoConsumo': parcelaConsumoValue,
+        'VolumePerdido': parcelaPeriddaValue,
         'QuantidadeVendida': quantidadeVendidaValue,
         'PrecoUnitario': precoUnitarioValue,
         'ValorTotalVendas': quantidadeVendidaValue * precoUnitarioValue,
-        // 'ParcelaPAA': parcelaPAAValue,
-        // 'ParcelaMercadosLocais': parcelaMercadosLocaisValue,
-        // 'ParcelaOutrosEstados': parcelaOutrosEstadosValue,
-        'ParcelaConsumo': parcelaConsumoValue,
+
         // 'ValorConsumo': valorConsumoValue,
       };
 
-      // Adicionar o item à lista de itens
-      itens.add(itemDataVegetal);
+      // Adicionar o item à lista de itensVegetais
+      itensProcessadosAnimais.add(itemDataProcessadoAnimal);
     }
 
-    late DateTime selectedDate = DateTime.now();
 
+    late DateTime selectedDate = DateTime.now();
     // Obter a data atual com hora zero
     DateTime dateWithoutTime = DateTime(
       selectedDate.year,
@@ -261,32 +366,31 @@ class _FormPageState extends State<FormPage> {
 
     // Formatar a data
     String formattedDate = DateFormat('dd-MM-yyyy').format(dateWithoutTime);
-
     // Formatar a hora
     String formattedTime = DateFormat('HH:mm').format(selectedDate);
 
     // Definir os dados a serem salvos
     Map<String, dynamic> data = {
-      'Entrevistador': user.email,
-      'DataEntrevista': formattedDate,
-      'HoraEntrevista': formattedTime,
-      // 'GrupoAmostral': _selectedGroup,
-      // 'Municipio': _selectedMunicipio,
-      'Comunidade': comunidadeController.text,
-      // 'IdentificacaoSociocultural': _selectedComunity,
-      // 'CaracteristicaMoradias': _selectedMoradias,
-      'AtividadesProdutivas': _selectedActivities,
-      'NomeEntrevistado': nameEntrevistadoController.text,
-      'NomeChefeFamilia': nameChefeFamiliaController.text,
-      'CPFChefe': cpfController.text,
-      'NIS/CADUnicoChefe': nisController.text,
-      'TelefoneChefe': telefoneController.text,
-      // 'GeneroChefe': _selectedGender,
-      'possuiDAP': _selectedDAP,
-      'unidadesFamiliares': _selectedInstitutions,
-      'recebeuBeneficios': _selectedBeneficios,
-      'location': 'Lat: $latitude | Long: $longitude',
-      'Itens': itens,
+      '01 - DataEntrevista': formattedDate,
+      '02 - HoraEntrevista': formattedTime,
+      '03 - location': 'Lat: $latitude | Long: $longitude',
+      '04 - Entrevistador': user.email,
+      '05 - NomeEntrevistado': nameEntrevistadoController.text,
+      '06 - CPFentrevistado': cpfController.text,
+      '07 - TelefoneEntrevistado': telefoneController.text,
+      '08 - QntPessoasFamilia': quantidadeFamilia.text,
+      '09 - InstituicoesVisita': _visitedInstitutions? _selectedInstitutions : 'Não recebeu visitas',
+      '10 - PossuiDAP/CAF': _possuiDAP ? _selectedDAP : 'Não possui DAP',
+      '11 - PossuiCAR': _possuiCAR ? 'Sim' : 'Não',
+      '12 - SelosPropriedade': _possuiSelos ? _selectedSelos : 'Não possui Selos',
+      '13 - CategoriaFamilia': _selectedUnidade,
+      '14 - TipoProducao': _selectedProducao,
+      '15 - CNPO': _possuiCertificacao ? _selectedCertificacao : 'Não possui Certificação',
+      '16 - ItensVegetais': _produziuVegetais ? itensVegetais : 'Não produziu Vegetais',
+      '17 - ItensProcessadosVegetais': _produziuProcessadosVegetais ? itensProcessadosVegetais : 'Não produziu processados vegetal',
+      '18 - ItensAnimais': _criouAnimais ? itensAnimais : 'Não criou animais',
+      '19 - ItensProcessadosAnimais': _produziuProcessadosAnimais ? itensProcessadosAnimais : 'Não produziu processados animal',
+      '20 - CanaisComercializacao': _selectedCanais,
       // Adicione outros campos aqui com os respectivos valores
     };
 
@@ -1124,10 +1228,6 @@ class _FormPageState extends State<FormPage> {
                                   final areaController =
                                       areaPuraControllers.length > index
                                           ? areaPuraControllers[index]
-                                          : null;
-                                  final area2Controller =
-                                      areaConsorciadaControllers.length > index
-                                          ? areaConsorciadaControllers[index]
                                           : null;
                                   final quantidadeColhidaController =
                                       quantidadeColhidaControllers.length >
@@ -1972,51 +2072,39 @@ class _FormPageState extends State<FormPage> {
                                                                   Row(
                                                                     children: [
                                                                       Checkbox(
-                                                                        value: _allMonthsSelectedVegetal[
-                                                                            index],
-                                                                        onChanged:
-                                                                            (value) {
+                                                                        value: _allMonthsSelectedVegetal[index],
+                                                                        onChanged: (value) {
                                                                           setState(
-                                                                              () {
-                                                                            _allMonthsSelectedVegetal[index] =
-                                                                                value!;
-                                                                            if (value) {
-                                                                              for (int i = 0; i < 12; i++) {
-                                                                                _selectedMonthsVegetal[index][i] = true;
-                                                                              }
-                                                                            } else {
-                                                                              for (int i = 0; i < 12; i++) {
-                                                                                _selectedMonthsVegetal[index][i] = false;
-                                                                              }
-                                                                            }
-                                                                          });
+                                                                                () {
+                                                                              _allMonthsSelectedVegetal[index] = value!;
+                                                                              final allSelected = _allMonthsSelectedVegetal[index];
+                                                                              _selectedMonthsVegetal[index].months.forEach((month, _) {
+                                                                                _selectedMonthsVegetal[index].months[month] = allSelected;
+                                                                              });
+                                                                            },
+                                                                          );
                                                                         },
                                                                       ),
-                                                                      Text(
-                                                                          'Todos os Meses'),
+                                                                      Text('Todos os Meses'),
                                                                     ],
                                                                   ),
-                                                                  for (int i =
-                                                                          1;
-                                                                      i <= 12;
-                                                                      i++)
+                                                                  for (final month in _selectedMonthsVegetal[index].months.keys)
                                                                     Row(
                                                                       children: [
                                                                         Checkbox(
-                                                                          value:
-                                                                              _selectedMonthsVegetal[index][i - 1],
-                                                                          onChanged:
-                                                                              (value) {
-                                                                            setState(() {
-                                                                              _selectedMonthsVegetal[index][i - 1] = value!;
-                                                                              if (value && _allMonthsSelectedVegetal[index]) {
-                                                                                _allMonthsSelectedVegetal[index] = false;
-                                                                              }
-                                                                            });
+                                                                          value: _selectedMonthsVegetal[index].months[month],
+                                                                          onChanged: (value) {
+                                                                            setState(
+                                                                                  () {
+                                                                                _selectedMonthsVegetal[index].months[month] = value!;
+                                                                                if (value && _allMonthsSelectedVegetal[index]) {
+                                                                                  _allMonthsSelectedVegetal[index] = false;
+                                                                                }
+                                                                              },
+                                                                            );
                                                                           },
                                                                         ),
-                                                                        Text(getMonthName(
-                                                                            i)),
+                                                                        Text(month),
                                                                       ],
                                                                     ),
                                                                 ],
@@ -2171,13 +2259,6 @@ class _FormPageState extends State<FormPage> {
                                           ? areaProcessadosVegetalControllers[
                                               index]
                                           : null;
-                                  final volumeProcessadosVegetalController =
-                                      volumeProcessadosVegetalControllers
-                                                  .length >
-                                              index
-                                          ? volumeProcessadosVegetalControllers[
-                                              index]
-                                          : null;
                                   final quantidadeProduzidaProcessadosVegetalController =
                                       quantidadeProduzidaProcessadosVegetalControllers
                                                   .length >
@@ -2207,10 +2288,10 @@ class _FormPageState extends State<FormPage> {
                                               index]
                                           : null;
                                   final quantidadePerdidaProcessadosVegetaisController =
-                                      quantidadePerdidadeVegetaisControllers
+                                      quantidadePerdidadeProcessadosVegetaisControllers
                                                   .length >
                                               index
-                                          ? quantidadePerdidadeVegetaisControllers[
+                                          ? quantidadePerdidadeProcessadosVegetaisControllers[
                                               index]
                                           : null;
                                   return Column(
@@ -2279,9 +2360,6 @@ class _FormPageState extends State<FormPage> {
                                                   _selectedProcessadosVegetais
                                                       .add(value);
                                                   areaProcessadosVegetalControllers
-                                                      .add(
-                                                      TextEditingController());
-                                                  volumeProcessadosVegetalControllers
                                                       .add(
                                                       TextEditingController());
                                                   quantidadeProduzidaProcessadosVegetalControllers
@@ -3945,13 +4023,6 @@ class _FormPageState extends State<FormPage> {
                                       areaProcessadosAnimalControllers.length >
                                               index
                                           ? areaProcessadosAnimalControllers[
-                                              index]
-                                          : null;
-                                  final volumeProcessadosAnimalController =
-                                      volumeProcessadosAnimalControllers
-                                                  .length >
-                                              index
-                                          ? volumeProcessadosAnimalControllers[
                                               index]
                                           : null;
                                   final quantidadeProduzidaProcessadosAnimalController =
